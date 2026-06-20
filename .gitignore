@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.vercel/
+.DS_Store
+*.log
+
+# Local visual QA artifacts
+qa-*.png
+qa-compare.html
+design-qa.md
+implementation-full.png
+art-carousel.png
+wallet-carousel.png
