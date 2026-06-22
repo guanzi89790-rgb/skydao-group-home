@@ -21,6 +21,8 @@ export default function useSiteMotion(scope) {
     let gestureReleaseTimer
     let wheelResetTimer
     let scrollTween
+    let openingFallbackTimer
+    let openingFinished = false
     window.scrollTo(0, 0)
 
     const closestPanelIndex = () => panels.reduce((closest, panel, index) => (
@@ -111,6 +113,17 @@ export default function useSiteMotion(scope) {
 
       document.body.style.overflow = 'hidden'
 
+      const finishOpening = () => {
+        if (openingFinished) return
+        openingFinished = true
+        window.clearTimeout(openingFallbackTimer)
+        document.body.style.overflow = previousOverflow
+        fullPageEnabled = true
+        document.documentElement.classList.add('fullpage-ready')
+        document.documentElement.classList.add('fullpage-controlled')
+        ScrollTrigger.refresh()
+      }
+
       gsap.set('.site-header', { yPercent: -120, autoAlpha: 0 })
       gsap.set('.hero-title-inner', { yPercent: 118, scaleX: 0.68, transformOrigin: 'left center' })
       gsap.set('.hero-intro-item', { y: 34, autoAlpha: 0 })
@@ -120,13 +133,7 @@ export default function useSiteMotion(scope) {
 
       const opening = gsap.timeline({
         defaults: { ease: 'power4.inOut' },
-        onComplete: () => {
-          document.body.style.overflow = previousOverflow
-          fullPageEnabled = true
-          document.documentElement.classList.add('fullpage-ready')
-          document.documentElement.classList.add('fullpage-controlled')
-          ScrollTrigger.refresh()
-        },
+        onComplete: finishOpening,
       })
 
       opening
@@ -141,6 +148,12 @@ export default function useSiteMotion(scope) {
         .to('.site-header', { yPercent: 0, autoAlpha: 1, duration: 1.05, ease: 'expo.out' }, 3.6)
         .to('.hero-title-inner', { yPercent: 0, scaleX: 1, duration: 1.6, ease: 'expo.out' }, 3.48)
         .to('.hero-intro-item', { y: 0, autoAlpha: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' }, 3.88)
+
+      openingFallbackTimer = window.setTimeout(() => {
+        gsap.set('.opening-sequence', { autoAlpha: 0, pointerEvents: 'none' })
+        gsap.set('.site-header, .hero-title-inner, .hero-intro-item', { clearProps: 'all' })
+        finishOpening()
+      }, 6000)
 
       const heroReturn = gsap.timeline({ paused: true })
         .fromTo(
@@ -269,6 +282,7 @@ export default function useSiteMotion(scope) {
       root.removeEventListener('click', onAnchorClick)
       window.clearTimeout(gestureReleaseTimer)
       window.clearTimeout(wheelResetTimer)
+      window.clearTimeout(openingFallbackTimer)
       scrollTween?.kill()
       context.revert()
     }
