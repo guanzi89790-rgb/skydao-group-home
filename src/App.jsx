@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import CircularGallery from './CircularGallery.jsx'
 import useSiteMotion from './useSiteMotion.js'
 
 const navItems = [
@@ -77,35 +76,48 @@ const artCards = [
 
 const physicalAIProducts = [
   {
-    image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1400&q=90',
-    text: 'AI 潮玩',
+    image: '/assets/products/ness-ai-companion.jpg',
+    kicker: 'NESS.AI · DISPLAY 01',
+    name: 'Ness.AI',
+    label: '深度情感陪伴与互动 Choupette',
   },
   {
-    image: 'https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=1400&q=90',
-    text: '情感陪伴机器人',
+    image: '/assets/products/humanoid-robot-lab.jpg',
+    kicker: 'NESS.AI · DISPLAY 02',
+    name: 'Ness.AI',
+    label: '深度情感陪伴与互动 Choupette',
+  },
+  {
+    image: '/assets/products/designer-cat-ip.jpg',
+    kicker: 'KARL LAGERFELD · DISPLAY 01',
+    name: 'Karl Lagerfeld（老佛爷）',
+    label: '标志性爱猫 Choupette 正版版权',
+  },
+  {
+    image: '/assets/products/ai-cat-companion.jpg',
+    kicker: 'KARL LAGERFELD · DISPLAY 02',
+    name: 'Karl Lagerfeld（老佛爷）',
+    label: '标志性爱猫 Choupette 正版版权',
   },
 ]
 
 const walletCards = [
   {
     tier: 'BLACK',
-    name: 'SKYDAO',
-    number: '086  572  100',
-    label: 'GLOBAL ASSET CARD',
+    name: 'SkyDAO VISA Platinum',
+    image: '/assets/cards/skydao-visa-platinum.jpg',
     tone: 'graphite',
   },
   {
     tier: 'SIGNATURE',
-    name: 'SKYDAO',
-    number: '572  086  001',
-    label: 'DIGITAL CURRENCY CARD',
+    name: 'SkyDAO VISA Platinum',
+    image: '/assets/cards/skydao-visa-platinum.jpg',
     tone: 'carbon',
   },
   {
     tier: 'INFINITE',
-    name: 'SKYDAO',
-    number: '100  572  086',
-    label: 'PRIVATE CLIENT CARD',
+    name: 'SkyDAO VISA Platinum',
+    image: '/assets/cards/skydao-visa-platinum.jpg',
     tone: 'obsidian',
   },
 ]
@@ -145,14 +157,72 @@ function ArrowButton({ children, secondary = false, href = '#about' }) {
   )
 }
 
-function Hero() {
+const heroImages = [
+  '/assets/hero/central-gate-energy-base.jpg',
+  '/assets/hero/central-gate-valley.jpg',
+  '/assets/hero/central-gate-datacenter.jpg',
+]
+
+function HeroMedia() {
+  const videoRef = useRef(null)
+  const startedVideo = useRef(false)
+  const prefersReducedMotion = useRef(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  const [activeMedia, setActiveMedia] = useState(0)
+
+  useEffect(() => {
+    if (prefersReducedMotion.current) return undefined
+
+    if (activeMedia === 'video') {
+      startedVideo.current = true
+      const video = videoRef.current
+      if (!video) return undefined
+      video.currentTime = 0
+      video.play().catch(() => setActiveMedia(1))
+      return undefined
+    }
+
+    videoRef.current?.pause()
+    const firstRevealDelay = startedVideo.current ? 5000 : 2300
+    const timer = window.setTimeout(() => {
+      if (!startedVideo.current) {
+        setActiveMedia('video')
+      } else if (activeMedia < heroImages.length - 1) {
+        setActiveMedia(activeMedia + 1)
+      } else {
+        setActiveMedia('video')
+      }
+    }, firstRevealDelay)
+
+    return () => window.clearTimeout(timer)
+  }, [activeMedia])
+
   return (
-    <section className="hero" id="central-gate">
-      <div className="hero-media" aria-hidden="true">
-        <video autoPlay muted loop playsInline poster="https://images.unsplash.com/photo-1464278533981-50106e6176b1?auto=format&fit=crop&w=2400&q=90">
-          <source src="/media/central-gate.mp4" type="video/mp4" />
+    <div className="hero-media" aria-hidden="true">
+      {heroImages.map((image, index) => (
+        <div className={`hero-media-layer hero-image-layer ${activeMedia === index ? 'is-active' : ''}`} key={image}>
+          <img src={image} alt="" />
+        </div>
+      ))}
+      <div className={`hero-media-layer hero-video-layer ${activeMedia === 'video' ? 'is-active' : ''}`}>
+        <video
+          ref={videoRef}
+          muted
+          playsInline
+          preload="auto"
+          poster={heroImages[0]}
+          onEnded={() => setActiveMedia(0)}
+        >
+          <source src="/assets/hero/central-gate-aerial.mp4" type="video/mp4" />
         </video>
       </div>
+    </div>
+  )
+}
+
+function Hero() {
+  return (
+    <section className="hero fullpage-panel" id="central-gate" data-panel-label="Central Gate">
+      <HeroMedia />
       <div className="hero-overlay" aria-hidden="true" />
       <div className="hero-content">
         <p className="eyebrow hero-intro-item">ENERGY × COMPUTE · 集团旗舰</p>
@@ -164,10 +234,53 @@ function Hero() {
           <ArrowButton href="#about" secondary>集团价值链</ArrowButton>
         </div>
       </div>
-      <div className="page-dots" aria-hidden="true">
-        <i className="active" /><i /><i /><i /><i />
-      </div>
     </section>
+  )
+}
+
+const panelLinks = [
+  ['Central Gate', '#central-gate'],
+  ['Physical AI', '#physical-ai'],
+  ['Wallet', '#wallet'],
+  ['Art', '#art'],
+  ['AIES', '#aies'],
+  ['About', '#about'],
+]
+
+function FullPageRail() {
+  const [activePanel, setActivePanel] = useState('central-gate')
+
+  useEffect(() => {
+    const panels = [...document.querySelectorAll('.fullpage-panel')]
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const active = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+        if (active?.target?.id) setActivePanel(active.target.id)
+      },
+      { threshold: [0.45, 0.65, 0.82] },
+    )
+
+    panels.forEach((panel) => observer.observe(panel))
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <nav className="fullpage-rail" aria-label="页面章节">
+      {panelLinks.map(([label, href], index) => (
+        <a
+          className={activePanel === href.slice(1) ? 'is-active' : ''}
+          href={href}
+          key={href}
+          aria-label={`前往 ${label}`}
+          aria-current={activePanel === href.slice(1) ? 'true' : undefined}
+        >
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <i />
+        </a>
+      ))}
+    </nav>
   )
 }
 
@@ -176,7 +289,12 @@ function OpeningSequence() {
     <div className="opening-sequence" aria-hidden="true">
       <div className="opening-curtain opening-curtain-top" />
       <div className="opening-curtain opening-curtain-bottom" />
-      <div className="opening-brand"><span className="opening-brand-inner">SKYDAO GROUP</span></div>
+      <div className="opening-brand">
+        <div className="opening-logo-mask">
+          <img className="opening-logo-inner" src="/assets/brand/skydao-logo-light.svg" alt="" />
+        </div>
+        <div className="opening-word-mask"><span className="opening-brand-inner">SKYDAO GROUP</span></div>
+      </div>
       <div className="opening-progress"><i className="opening-progress-bar" /></div>
     </div>
   )
@@ -189,8 +307,9 @@ function FeatureSection({ item }) {
 
   return (
     <section
-      className={`feature-section feature-${item.align}`}
+      className={`feature-section fullpage-panel feature-${item.align}`}
       id={item.id}
+      data-panel-label={item.title}
       style={{ '--feature-image': `url(${item.image})` }}
     >
       <div className="feature-shade" aria-hidden="true" />
@@ -233,8 +352,9 @@ function WalletCarouselSection({ item }) {
 
   return (
     <section
-      className="feature-section wallet-carousel-section"
+      className="feature-section fullpage-panel wallet-carousel-section"
       id={item.id}
+      data-panel-label={item.title}
       style={{ '--feature-image': `url(${item.image})` }}
     >
       <div className="feature-shade" aria-hidden="true" />
@@ -256,15 +376,8 @@ function WalletCarouselSection({ item }) {
               aria-label={`选择 SkyDAO ${card.tier} 卡片`}
               aria-pressed={index === activeCard}
             >
-              <span className="wallet-card-top">
-                <strong>{card.name}</strong>
-                <small>{card.tier}</small>
-              </span>
-              <span className="wallet-card-number">{card.number}</span>
-              <span className="wallet-card-bottom">
-                <small>{card.label}</small>
-                <strong>VISA</strong>
-              </span>
+              <img className="wallet-card-art" src={card.image} alt={card.name} draggable="false" />
+              <span className="wallet-card-glare" aria-hidden="true" />
             </button>
           ))}
         </div>
@@ -283,8 +396,9 @@ function WalletCarouselSection({ item }) {
 function PhysicalAISection({ item }) {
   return (
     <section
-      className="feature-section physical-ai-section"
+      className="feature-section fullpage-panel physical-ai-section"
       id={item.id}
+      data-panel-label={item.title}
       style={{ '--feature-image': `url(${item.image})` }}
     >
       <div className="feature-shade" aria-hidden="true" />
@@ -293,22 +407,21 @@ function PhysicalAISection({ item }) {
           <p className="eyebrow">{item.eyebrow}</p>
           <h2>{item.title}</h2>
           <p className="feature-copy">{item.copy}</p>
-          <p className="gallery-hint">DRAG TO EXPLORE · 两个主打产品</p>
+          <p className="gallery-hint">TWO PRODUCTS · FOUR VISUAL STORIES · 两大产品 / 四组展示</p>
         </div>
-        <div className="physical-ai-gallery">
-          <CircularGallery
-            items={physicalAIProducts}
-            bend={2.4}
-            textColor="#ffffff"
-            borderRadius={0.045}
-            scrollSpeed={2}
-            scrollEase={0.045}
-            font={'500 24px "Noto Sans SC"'}
-          />
-        </div>
-        <div className="product-index" aria-label="两个主打产品">
-          <span><i>01</i>AI 潮玩</span>
-          <span><i>02</i>情感陪伴机器人</span>
+        <div className="physical-product-grid" aria-label="两大产品的四组展示">
+          {physicalAIProducts.map((product, index) => (
+            <article className="physical-product-card" key={`${product.name}-${index}`}>
+              <img src={product.image} alt={product.name} />
+              <span className="physical-product-shade" aria-hidden="true" />
+              <span className="physical-product-number">{String(index + 1).padStart(2, '0')}</span>
+              <span className="physical-product-copy">
+                <small>{product.kicker}</small>
+                <strong>{product.name}</strong>
+                <em>{product.label}</em>
+              </span>
+            </article>
+          ))}
         </div>
         <ArrowButton>{item.button}</ArrowButton>
       </Reveal>
@@ -332,8 +445,9 @@ function ArtCarouselSection({ item }) {
 
   return (
     <section
-      className="feature-section art-carousel-section"
+      className="feature-section fullpage-panel art-carousel-section"
       id={item.id}
+      data-panel-label={item.title}
       style={{ '--feature-image': `url(${item.image})` }}
     >
       <div className="feature-shade" aria-hidden="true" />
@@ -343,7 +457,6 @@ function ArtCarouselSection({ item }) {
           <h2>{item.title}</h2>
           <h3>{item.subtitle}</h3>
           <p className="feature-copy">{item.copy}</p>
-          <ArrowButton>{item.button}</ArrowButton>
         </div>
 
         <div className="art-card-stage" aria-label="SkyDAO Art 展示卡片">
@@ -372,6 +485,7 @@ function ArtCarouselSection({ item }) {
           <span>{String(activeCard + 1).padStart(2, '0')} / 03</span>
           <button type="button" onClick={() => move(1)}>NEXT</button>
         </div>
+        <ArrowButton>{item.button}</ArrowButton>
       </Reveal>
     </section>
   )
@@ -379,7 +493,7 @@ function ArtCarouselSection({ item }) {
 
 function Footer() {
   return (
-    <footer className="footer" id="about">
+    <footer className="footer fullpage-panel" id="about" data-panel-label="About SkyDAO">
       <div className="footer-main">
         <div className="footer-brand">
           <span className="footer-mark">SKYDAO GROUP</span>
@@ -417,6 +531,7 @@ export default function App() {
     <div className="site-shell" ref={appRef}>
       <OpeningSequence />
       <Header />
+      <FullPageRail />
       <main>
         <Hero />
         {featureSections.map((item) => <FeatureSection key={item.id} item={item} />)}

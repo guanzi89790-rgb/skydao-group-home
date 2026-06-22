@@ -1,8 +1,9 @@
 import { useLayoutEffect } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
 export default function useSiteMotion(scope) {
   useLayoutEffect(() => {
@@ -10,87 +11,219 @@ export default function useSiteMotion(scope) {
     if (!root) return undefined
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const usesCustomScroll = !prefersReducedMotion
     const previousOverflow = document.body.style.overflow
+    const panels = [...root.querySelectorAll('.fullpage-panel')]
+    let fullPageEnabled = prefersReducedMotion
+    let scrollLocked = false
+    let transitionComplete = false
+    let wheelAccumulator = 0
+    let gestureReleaseTimer
+    let wheelResetTimer
+    let scrollTween
+    let loadingAssetTimeout
+    let minimumOpeningTimer
+    let motionDisposed = false
+    const loadingAbortController = new AbortController()
     window.scrollTo(0, 0)
+
+    const waitForCriticalAssets = () => {
+      const waitForImage = (image) => {
+        if (image.complete && image.naturalWidth > 0) return Promise.resolve()
+        return new Promise((resolve) => {
+          const finish = () => resolve()
+          image.addEventListener('load', finish, { once: true, signal: loadingAbortController.signal })
+          image.addEventListener('error', finish, { once: true, signal: loadingAbortController.signal })
+        })
+      }
+
+      const video = root.querySelector('.hero video')
+      const waitForVideo = !video || video.readyState >= 2
+        ? Promise.resolve()
+        : new Promise((resolve) => {
+            const finish = () => resolve()
+            video.addEventListener('canplay', finish, { once: true, signal: loadingAbortController.signal })
+            video.addEventListener('error', finish, { once: true, signal: loadingAbortController.signal })
+          })
+
+      const mediaReady = Promise.allSettled([
+        ...[...root.querySelectorAll('img')].map(waitForImage),
+        waitForVideo,
+        document.fonts?.ready ?? Promise.resolve(),
+      ])
+
+      const assetTimeout = new Promise((resolve) => {
+        loadingAssetTimeout = window.setTimeout(resolve, 3200)
+      })
+
+      return Promise.race([mediaReady, assetTimeout])
+    }
+
+    const closestPanelIndex = () => panels.reduce((closest, panel, index) => (
+      Math.abs(panel.offsetTop - window.scrollY) < Math.abs(panels[closest].offsetTop - window.scrollY)
+        ? index
+        : closest
+    ), 0)
+
+    const scheduleGestureRelease = () => {
+      window.clearTimeout(gestureReleaseTimer)
+      gestureReleaseTimer = window.setTimeout(() => {
+        if (!transitionComplete) return
+        scrollLocked = false
+        wheelAccumulator = 0
+      }, 280)
+    }
+
+    const goToPanel = (index) => {
+      const targetIndex = Math.max(0, Math.min(panels.length - 1, index))
+      if (!panels[targetIndex]) return
+      scrollLocked = true
+      transitionComplete = false
+      wheelAccumulator = 0
+      scrollTween?.kill()
+      scrollTween = gsap.to(window, {
+        scrollTo: { y: panels[targetIndex], autoKill: false },
+        duration: prefersReducedMotion ? 0.01 : 0.94,
+        ease: 'power2.inOut',
+        overwrite: 'auto',
+        onComplete: () => {
+          transitionComplete = true
+          scheduleGestureRelease()
+          ScrollTrigger.update()
+        },
+      })
+    }
+
+    const onWheel = (event) => {
+      if (!fullPageEnabled || !usesCustomScroll || Math.abs(event.deltaY) < 2) return
+      event.preventDefault()
+      if (scrollLocked) {
+        scheduleGestureRelease()
+        return
+      }
+
+      wheelAccumulator += event.deltaY
+      window.clearTimeout(wheelResetTimer)
+      wheelResetTimer = window.setTimeout(() => { wheelAccumulator = 0 }, 140)
+      if (Math.abs(wheelAccumulator) < 36) return
+
+      const current = closestPanelIndex()
+      const next = current + (wheelAccumulator > 0 ? 1 : -1)
+      wheelAccumulator = 0
+      if (next === current || next < 0 || next >= panels.length) return
+      goToPanel(next)
+    }
+
+    const onAnchorClick = (event) => {
+      if (!fullPageEnabled || !usesCustomScroll || !(event.target instanceof Element)) return
+      const anchor = event.target.closest('a[href^="#"]')
+      if (!anchor) return
+      const target = panels.find((panel) => `#${panel.id}` === anchor.getAttribute('href'))
+      if (!target) return
+      event.preventDefault()
+      window.history.replaceState(null, '', `#${target.id}`)
+      goToPanel(panels.indexOf(target))
+    }
+
+    const onKeyDown = (event) => {
+      const isNext = ['ArrowDown', 'PageDown'].includes(event.key) || (event.key === ' ' && !event.shiftKey)
+      const isPrevious = ['ArrowUp', 'PageUp'].includes(event.key) || (event.key === ' ' && event.shiftKey)
+      if ((!isNext && !isPrevious) || event.target.closest('button, a, input, textarea, select')) return
+      event.preventDefault()
+      if (!scrollLocked) goToPanel(closestPanelIndex() + (isNext ? 1 : -1))
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('keydown', onKeyDown)
+    root.addEventListener('click', onAnchorClick)
 
     const context = gsap.context(() => {
       if (prefersReducedMotion) {
         gsap.set('.opening-sequence', { display: 'none' })
         gsap.set('.hero-title-inner, .hero-intro-item, .site-header', { clearProps: 'all' })
+        document.documentElement.classList.add('fullpage-ready')
         return
       }
 
       document.body.style.overflow = 'hidden'
-      gsap.ticker.lagSmoothing(500, 33)
 
       gsap.set('.site-header', { yPercent: -120, autoAlpha: 0 })
       gsap.set('.hero-title-inner', { yPercent: 118, scaleX: 0.68, transformOrigin: 'left center' })
       gsap.set('.hero-intro-item', { y: 34, autoAlpha: 0 })
-      gsap.set('.opening-brand-inner', { yPercent: 115 })
+      gsap.set('.opening-brand-inner', { yPercent: 120, autoAlpha: 0 })
+      gsap.set('.opening-logo-inner', { yPercent: 115, scale: 0.72, autoAlpha: 0, transformOrigin: 'center center' })
       gsap.set('.opening-progress-bar', { scaleX: 0, transformOrigin: 'left center' })
 
       const opening = gsap.timeline({
         defaults: { ease: 'power4.inOut' },
         onComplete: () => {
           document.body.style.overflow = previousOverflow
+          fullPageEnabled = true
+          document.documentElement.classList.add('fullpage-ready')
+          document.documentElement.classList.add('fullpage-controlled')
           ScrollTrigger.refresh()
         },
       })
 
       opening
-        .to('.opening-brand-inner', { yPercent: 0, duration: 1.05, ease: 'expo.out' }, 0.18)
-        .to('.opening-progress-bar', { scaleX: 1, duration: 1.35, ease: 'power3.inOut' }, 0.35)
-        .to('.opening-brand-inner', { yPercent: -120, duration: 0.72, ease: 'power3.in' }, 1.42)
-        .to('.opening-curtain-top', { yPercent: -102, duration: 1.22, ease: 'expo.inOut' }, 1.72)
-        .to('.opening-curtain-bottom', { yPercent: 102, duration: 1.22, ease: 'expo.inOut' }, 1.72)
-        .to('.opening-sequence', { autoAlpha: 0, duration: 0.25, pointerEvents: 'none' }, 2.72)
-        .to('.site-header', { yPercent: 0, autoAlpha: 1, duration: 1.05, ease: 'expo.out' }, 2.3)
-        .to('.hero-title-inner', { yPercent: 0, scaleX: 1, duration: 1.6, ease: 'expo.out' }, 2.18)
-        .to('.hero-intro-item', { y: 0, autoAlpha: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' }, 2.58)
+        .to('.opening-logo-inner', { yPercent: 0, scale: 1, autoAlpha: 1, duration: 1.08, ease: 'expo.out' }, 0.08)
+        .to('.opening-brand-inner', { yPercent: 0, autoAlpha: 1, duration: 1, ease: 'expo.out' }, 0.2)
+        .to('.opening-progress-bar', { scaleX: 1, duration: 1.2, ease: 'power3.inOut' }, 0.35)
+        .addPause(1.56)
+        .to('.opening-brand-inner', { yPercent: -120, autoAlpha: 0, duration: 0.68, ease: 'power3.in' }, 1.68)
+        .to('.opening-logo-inner', { yPercent: -120, scale: 0.94, autoAlpha: 0, duration: 0.76, ease: 'power3.in' }, 1.64)
+        .to('.opening-curtain-top', { yPercent: -102, duration: 1.22, ease: 'expo.inOut' }, 2.02)
+        .to('.opening-curtain-bottom', { yPercent: 102, duration: 1.22, ease: 'expo.inOut' }, 2.02)
+        .to('.opening-sequence', { autoAlpha: 0, duration: 0.25, pointerEvents: 'none' }, 3.02)
+        .to('.site-header', { yPercent: 0, autoAlpha: 1, duration: 1.05, ease: 'expo.out' }, 2.6)
+        .to('.hero-title-inner', { yPercent: 0, scaleX: 1, duration: 1.6, ease: 'expo.out' }, 2.48)
+        .to('.hero-intro-item', { y: 0, autoAlpha: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' }, 2.88)
 
-      gsap.fromTo(
-        '.hero-media',
-        { scale: 1.03, yPercent: 0 },
-        {
-          scale: 1.13,
-          yPercent: 9,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.hero',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1.5,
-          },
-        },
-      )
+      const minimumOpening = new Promise((resolve) => {
+        minimumOpeningTimer = window.setTimeout(resolve, 2500)
+      })
+
+      Promise.all([minimumOpening, waitForCriticalAssets()]).then(() => {
+        if (!motionDisposed) opening.play()
+      })
+
+      const heroReturn = gsap.timeline({ paused: true })
+        .fromTo(
+          '.hero-title-inner',
+          { yPercent: 82, scaleX: 0.76, transformOrigin: 'left center' },
+          { yPercent: 0, scaleX: 1, duration: 1.15, ease: 'expo.out', immediateRender: false },
+        )
+        .fromTo(
+          '.hero-intro-item',
+          { y: 28, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.08, ease: 'power2.out', immediateRender: false },
+          0.22,
+        )
+
+      ScrollTrigger.create({
+        trigger: '.hero',
+        start: 'top 76%',
+        end: 'bottom 24%',
+        onEnterBack: () => heroReturn.restart(),
+        onLeave: () => heroReturn.pause(0),
+      })
 
       gsap.utils.toArray('.feature-section').forEach((section) => {
         const title = section.querySelector('h2')
         const eyebrow = section.querySelector('.eyebrow')
         const supporting = section.querySelectorAll('h3, .feature-copy, .gallery-hint')
         const cta = section.querySelector('.button')
-        const stage = section.querySelector('.physical-ai-gallery, .wallet-card-stage, .art-card-stage')
-        const cardItems = section.querySelectorAll('.wallet-card, .art-slide')
+        const stage = section.querySelector('.physical-product-grid, .wallet-card-stage, .art-card-stage')
+        const cardItems = section.querySelectorAll('.physical-product-card, .wallet-card, .art-slide')
+        const isPhysical = section.classList.contains('physical-ai-section')
         const centered = !section.classList.contains('feature-left')
-
-        gsap.set(section, { '--motion-scale': 1.12, '--motion-y': '-3%' })
-        gsap.to(section, {
-          '--motion-scale': 1.025,
-          '--motion-y': '3%',
-          ease: 'none',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.6,
-          },
-        })
 
         const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: section,
             start: 'top 76%',
-            once: true,
+            end: 'bottom 24%',
+            toggleActions: 'restart reset restart reset',
           },
         })
 
@@ -121,8 +254,8 @@ export default function useSiteMotion(scope) {
         if (stage) {
           timeline.fromTo(
             stage,
-            { clipPath: 'inset(0 100% 0 0)', y: 46 },
-            { clipPath: 'inset(0 0% 0 0)', y: 0, duration: 1.45, ease: 'expo.inOut', clearProps: 'clipPath,transform' },
+            { y: 38, scale: 0.975, autoAlpha: 0 },
+            { y: 0, scale: 1, autoAlpha: 1, duration: 1.05, ease: 'power3.out', clearProps: 'transform,opacity,visibility' },
             0.7,
           )
         }
@@ -130,16 +263,16 @@ export default function useSiteMotion(scope) {
         if (cardItems.length) {
           timeline.fromTo(
             cardItems,
-            { clipPath: 'inset(0 100% 0 0)', autoAlpha: 0 },
+            isPhysical ? { autoAlpha: 0, y: 64, scale: 0.92 } : { autoAlpha: 0 },
             {
-              clipPath: 'inset(0 0% 0 0)',
               autoAlpha: 1,
-              duration: 1.1,
-              stagger: 0.16,
-              ease: 'power3.inOut',
-              clearProps: 'clipPath,opacity,visibility',
+              ...(isPhysical ? { y: 0, scale: 1 } : {}),
+              duration: 0.82,
+              stagger: 0.12,
+              ease: 'power2.out',
+              clearProps: isPhysical ? 'opacity,visibility,transform' : 'opacity,visibility',
             },
-            0.82,
+            0.76,
           )
         }
 
@@ -162,13 +295,30 @@ export default function useSiteMotion(scope) {
           duration: 1.2,
           stagger: 0.12,
           ease: 'power3.out',
-          scrollTrigger: { trigger: '.footer', start: 'top 82%', once: true },
+          scrollTrigger: {
+            trigger: '.footer',
+            start: 'top 82%',
+            end: 'bottom 18%',
+            toggleActions: 'restart reset restart reset',
+          },
         },
       )
     }, root)
 
     return () => {
+      motionDisposed = true
       document.body.style.overflow = previousOverflow
+      document.documentElement.classList.remove('fullpage-ready')
+      document.documentElement.classList.remove('fullpage-controlled')
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('keydown', onKeyDown)
+      root.removeEventListener('click', onAnchorClick)
+      window.clearTimeout(gestureReleaseTimer)
+      window.clearTimeout(wheelResetTimer)
+      window.clearTimeout(loadingAssetTimeout)
+      window.clearTimeout(minimumOpeningTimer)
+      loadingAbortController.abort()
+      scrollTween?.kill()
       context.revert()
     }
   }, [scope])
