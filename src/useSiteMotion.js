@@ -21,43 +21,7 @@ export default function useSiteMotion(scope) {
     let gestureReleaseTimer
     let wheelResetTimer
     let scrollTween
-    let loadingAssetTimeout
-    let minimumOpeningTimer
-    let motionDisposed = false
-    const loadingAbortController = new AbortController()
     window.scrollTo(0, 0)
-
-    const waitForCriticalAssets = () => {
-      const waitForImage = (image) => {
-        if (image.complete && image.naturalWidth > 0) return Promise.resolve()
-        return new Promise((resolve) => {
-          const finish = () => resolve()
-          image.addEventListener('load', finish, { once: true, signal: loadingAbortController.signal })
-          image.addEventListener('error', finish, { once: true, signal: loadingAbortController.signal })
-        })
-      }
-
-      const video = root.querySelector('.hero video')
-      const waitForVideo = !video || video.readyState >= 2
-        ? Promise.resolve()
-        : new Promise((resolve) => {
-            const finish = () => resolve()
-            video.addEventListener('canplay', finish, { once: true, signal: loadingAbortController.signal })
-            video.addEventListener('error', finish, { once: true, signal: loadingAbortController.signal })
-          })
-
-      const mediaReady = Promise.allSettled([
-        ...[...root.querySelectorAll('img')].map(waitForImage),
-        waitForVideo,
-        document.fonts?.ready ?? Promise.resolve(),
-      ])
-
-      const assetTimeout = new Promise((resolve) => {
-        loadingAssetTimeout = window.setTimeout(resolve, 3200)
-      })
-
-      return Promise.race([mediaReady, assetTimeout])
-    }
 
     const closestPanelIndex = () => panels.reduce((closest, panel, index) => (
       Math.abs(panel.offsetTop - window.scrollY) < Math.abs(panels[closest].offsetTop - window.scrollY)
@@ -168,24 +132,15 @@ export default function useSiteMotion(scope) {
       opening
         .to('.opening-logo-inner', { yPercent: 0, scale: 1, autoAlpha: 1, duration: 1.08, ease: 'expo.out' }, 0.08)
         .to('.opening-brand-inner', { yPercent: 0, autoAlpha: 1, duration: 1, ease: 'expo.out' }, 0.2)
-        .to('.opening-progress-bar', { scaleX: 1, duration: 1.2, ease: 'power3.inOut' }, 0.35)
-        .addPause(1.56)
-        .to('.opening-brand-inner', { yPercent: -120, autoAlpha: 0, duration: 0.68, ease: 'power3.in' }, 1.68)
-        .to('.opening-logo-inner', { yPercent: -120, scale: 0.94, autoAlpha: 0, duration: 0.76, ease: 'power3.in' }, 1.64)
-        .to('.opening-curtain-top', { yPercent: -102, duration: 1.22, ease: 'expo.inOut' }, 2.02)
-        .to('.opening-curtain-bottom', { yPercent: 102, duration: 1.22, ease: 'expo.inOut' }, 2.02)
-        .to('.opening-sequence', { autoAlpha: 0, duration: 0.25, pointerEvents: 'none' }, 3.02)
-        .to('.site-header', { yPercent: 0, autoAlpha: 1, duration: 1.05, ease: 'expo.out' }, 2.6)
-        .to('.hero-title-inner', { yPercent: 0, scaleX: 1, duration: 1.6, ease: 'expo.out' }, 2.48)
-        .to('.hero-intro-item', { y: 0, autoAlpha: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' }, 2.88)
-
-      const minimumOpening = new Promise((resolve) => {
-        minimumOpeningTimer = window.setTimeout(resolve, 2500)
-      })
-
-      Promise.all([minimumOpening, waitForCriticalAssets()]).then(() => {
-        if (!motionDisposed) opening.play()
-      })
+        .to('.opening-progress-bar', { scaleX: 1, duration: 2.2, ease: 'power3.inOut' }, 0.35)
+        .to('.opening-logo-inner', { yPercent: -120, scale: 0.94, autoAlpha: 0, duration: 0.76, ease: 'power3.in' }, 2.64)
+        .to('.opening-brand-inner', { yPercent: -120, autoAlpha: 0, duration: 0.68, ease: 'power3.in' }, 2.68)
+        .to('.opening-curtain-top', { yPercent: -102, duration: 1.22, ease: 'expo.inOut' }, 3.02)
+        .to('.opening-curtain-bottom', { yPercent: 102, duration: 1.22, ease: 'expo.inOut' }, 3.02)
+        .to('.opening-sequence', { autoAlpha: 0, duration: 0.25, pointerEvents: 'none' }, 4.02)
+        .to('.site-header', { yPercent: 0, autoAlpha: 1, duration: 1.05, ease: 'expo.out' }, 3.6)
+        .to('.hero-title-inner', { yPercent: 0, scaleX: 1, duration: 1.6, ease: 'expo.out' }, 3.48)
+        .to('.hero-intro-item', { y: 0, autoAlpha: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' }, 3.88)
 
       const heroReturn = gsap.timeline({ paused: true })
         .fromTo(
@@ -306,7 +261,6 @@ export default function useSiteMotion(scope) {
     }, root)
 
     return () => {
-      motionDisposed = true
       document.body.style.overflow = previousOverflow
       document.documentElement.classList.remove('fullpage-ready')
       document.documentElement.classList.remove('fullpage-controlled')
@@ -315,9 +269,6 @@ export default function useSiteMotion(scope) {
       root.removeEventListener('click', onAnchorClick)
       window.clearTimeout(gestureReleaseTimer)
       window.clearTimeout(wheelResetTimer)
-      window.clearTimeout(loadingAssetTimeout)
-      window.clearTimeout(minimumOpeningTimer)
-      loadingAbortController.abort()
       scrollTween?.kill()
       context.revert()
     }
