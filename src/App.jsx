@@ -26,7 +26,7 @@ const featureSections = [
     eyebrow: 'WEB3 FINANCE · 链上资产入口',
     title: 'SkyDAO Wallet',
     subtitle: '把价值，装进口袋',
-    copy: '让链上资产与现实消费无缝衔接，联合 VISA 完成法币兑付的最后一公里。',
+    copy: '让链上资产、卡片支付与 RWA 收益在同一个入口完成连接。',
     button: '了解 SkyDAO Wallet',
     image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=2400&q=88',
     align: 'center',
@@ -48,7 +48,7 @@ const featureSections = [
     subtitle: 'AI INFRASTRUCTURE × ENERGY SUMMIT · 算力能源峰会',
     copy: '集团在全球各地不定期举办的 AI 与能源算力行业大会——一个行业前沿资讯与高端对话的平台。首届 2026 · 香港。',
     button: '了解 AIES',
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2400&q=88',
+    image: '/assets/aies/aies-summit-collage-2026.png',
     align: 'left',
   },
 ]
@@ -90,35 +90,42 @@ const physicalAIProducts = [
   {
     image: '/assets/products/designer-cat-ip.jpg',
     kicker: 'KARL LAGERFELD · DISPLAY 01',
-    name: 'Karl Lagerfeld（老佛爷）',
-    label: '标志性爱猫 Choupette 正版版权',
+    name: 'Karl Lagerfeld',
+    label: '（老佛爷）标志性爱猫 Choupette 正版版权',
   },
   {
     image: '/assets/products/ai-cat-companion.jpg',
     kicker: 'KARL LAGERFELD · DISPLAY 02',
-    name: 'Karl Lagerfeld（老佛爷）',
-    label: '标志性爱猫 Choupette 正版版权',
+    name: 'Karl Lagerfeld',
+    label: '（老佛爷）标志性爱猫 Choupette 正版版权',
   },
 ]
 
 const walletCards = [
   {
-    tier: 'BLACK',
-    name: 'SkyDAO VISA Platinum',
-    image: '/assets/cards/skydao-visa-platinum.jpg',
-    tone: 'graphite',
+    badge: 'Wallet',
+    icon: '▣',
+    value: 'All-in-One',
+    title: 'Digital Wallet',
+    action: 'Secure asset control',
+    image: '/assets/wallet/wallet-digital-asset.png',
   },
   {
-    tier: 'SIGNATURE',
-    name: 'SkyDAO VISA Platinum',
-    image: '/assets/cards/skydao-visa-platinum.jpg',
-    tone: 'carbon',
+    badge: 'Card',
+    icon: '▭',
+    value: 'Global Card',
+    title: 'Spend crypto anywhere',
+    action: 'Instant settlement',
+    cta: 'Pay',
+    image: '/assets/wallet/wallet-global-card.png',
   },
   {
-    tier: 'INFINITE',
-    name: 'SkyDAO VISA Platinum',
-    image: '/assets/cards/skydao-visa-platinum.jpg',
-    tone: 'obsidian',
+    badge: 'Yield',
+    icon: '▥',
+    value: 'RWA Yield',
+    title: 'Real assets, on-chain',
+    action: 'Projected returns',
+    image: '/assets/wallet/wallet-rwa-yield.png',
   },
 ]
 
@@ -325,29 +332,23 @@ function FeatureSection({ item }) {
 }
 
 function WalletCarouselSection({ item }) {
-  const [activeCard, setActiveCard] = useState(0)
-  const [rolling, setRolling] = useState(false)
-  const rollTimer = useRef(null)
-
-  useEffect(() => () => window.clearTimeout(rollTimer.current), [])
-
-  const positionFor = (index) => {
-    const offset = (index - activeCard + walletCards.length) % walletCards.length
-    if (offset === 0) return 'is-active'
-    if (offset === 1) return 'is-next'
-    return 'is-prev'
+  const resetTilt = (event) => {
+    event.currentTarget.style.setProperty('--tilt-x', '0deg')
+    event.currentTarget.style.setProperty('--tilt-y', '0deg')
+    event.currentTarget.style.setProperty('--spot-x', '50%')
+    event.currentTarget.style.setProperty('--spot-y', '30%')
   }
 
-  const selectCard = (index) => {
-    if (index === activeCard && rolling) return
-    window.clearTimeout(rollTimer.current)
-    setActiveCard(index)
-    setRolling(true)
-    rollTimer.current = window.setTimeout(() => setRolling(false), 760)
-  }
+  const moveTilt = (event) => {
+    const card = event.currentTarget
+    const rect = card.getBoundingClientRect()
+    const x = (event.clientX - rect.left) / rect.width
+    const y = (event.clientY - rect.top) / rect.height
 
-  const move = (direction) => {
-    selectCard((activeCard + direction + walletCards.length) % walletCards.length)
+    card.style.setProperty('--tilt-x', `${((0.5 - y) * 8).toFixed(2)}deg`)
+    card.style.setProperty('--tilt-y', `${((x - 0.5) * 8).toFixed(2)}deg`)
+    card.style.setProperty('--spot-x', `${(x * 100).toFixed(1)}%`)
+    card.style.setProperty('--spot-y', `${(y * 100).toFixed(1)}%`)
   }
 
   return (
@@ -366,26 +367,34 @@ function WalletCarouselSection({ item }) {
           <p className="feature-copy">{item.copy}</p>
         </div>
 
-        <div className="wallet-card-stage" aria-label="SkyDAO Wallet 黑卡系列">
+        <div className="wallet-card-stage" aria-label="SkyDAO Wallet 产品能力">
           {walletCards.map((card, index) => (
-            <button
-              className={`wallet-card wallet-${card.tone} ${positionFor(index)} ${positionFor(index) === 'is-active' && rolling ? 'is-rolling' : ''}`}
-              key={card.tier}
-              type="button"
-              onClick={() => selectCard(index)}
-              aria-label={`选择 SkyDAO ${card.tier} 卡片`}
-              aria-pressed={index === activeCard}
+            <article
+              className={`wallet-card wallet-feature-card ${card.abstract ? 'is-abstract' : ''}`}
+              key={card.badge}
+              onPointerMove={moveTilt}
+              onPointerLeave={resetTilt}
+              style={{ '--wallet-card-index': index }}
             >
-              <img className="wallet-card-art" src={card.image} alt={card.name} draggable="false" />
+              {card.image && <img className="wallet-card-art" src={card.image} alt="" draggable="false" />}
+              <span className="wallet-card-abstract" aria-hidden="true" />
               <span className="wallet-card-glare" aria-hidden="true" />
-            </button>
+              <span className="wallet-card-badge">
+                <i aria-hidden="true">{card.icon}</i>
+                {card.badge}
+              </span>
+              <span className="wallet-card-copy">
+                <strong>{card.value}</strong>
+                <em>{card.title}</em>
+              </span>
+              <span className="wallet-card-action">
+                <i aria-hidden="true">{card.icon}</i>
+                <span>{card.action}</span>
+                {card.cta && <b>{card.cta}</b>}
+                <small aria-hidden="true">›</small>
+              </span>
+            </article>
           ))}
-        </div>
-
-        <div className="wallet-controls">
-          <button type="button" onClick={() => move(-1)}>PREV</button>
-          <span>{String(activeCard + 1).padStart(2, '0')} / 03</span>
-          <button type="button" onClick={() => move(1)}>NEXT</button>
         </div>
         <ArrowButton>{item.button}</ArrowButton>
       </Reveal>
@@ -494,6 +503,14 @@ function ArtCarouselSection({ item }) {
 function Footer() {
   return (
     <footer className="footer fullpage-panel" id="about" data-panel-label="About SkyDAO">
+      <div className="footer-about">
+        <p className="footer-about-label">ABOUT SKYDAO · 关于我们</p>
+        <h2>构建安全、合规、可持续的 Web3 金融基础设施。</h2>
+        <p>
+          SkyDAO 是立足香港、面向全球的数字金融集团，围绕数字资产管理、链上支付、RWA
+          与全球合规网络，连接链上资产与真实金融生活。
+        </p>
+      </div>
       <div className="footer-main">
         <div className="footer-brand">
           <span className="footer-mark">SKYDAO GROUP</span>
