@@ -53,6 +53,11 @@ const featureSections = [
   },
 ]
 
+const aboutSlides = [
+  '/assets/about/about-hongkong-skyline-01.png',
+  '/assets/about/about-hongkong-skyline-02.png',
+]
+
 const artCards = [
   {
     kicker: 'CURATED COLLECTION',
@@ -501,40 +506,71 @@ function ArtCarouselSection({ item }) {
 }
 
 function Footer() {
+  const [activeSlide, setActiveSlide] = useState(0)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % aboutSlides.length)
+    }, 6800)
+
+    return () => window.clearInterval(timer)
+  }, [])
+
   return (
     <footer className="footer fullpage-panel" id="about" data-panel-label="About SkyDAO">
-      <div className="footer-about">
-        <p className="footer-about-label">ABOUT SKYDAO · 关于我们</p>
-        <h2>构建安全、合规、可持续的 Web3 金融基础设施。</h2>
-        <p>
-          SkyDAO 是立足香港、面向全球的数字金融集团，围绕数字资产管理、链上支付、RWA
-          与全球合规网络，连接链上资产与真实金融生活。
-        </p>
+      <div className="footer-bg" aria-hidden="true">
+        {aboutSlides.map((image, index) => (
+          <div className={`footer-bg-layer ${index === activeSlide ? 'is-active' : ''}`} key={image}>
+            <img src={image} alt="" />
+          </div>
+        ))}
+        <div className="footer-bg-overlay" />
       </div>
-      <div className="footer-main">
-        <div className="footer-brand">
-          <span className="footer-mark">SKYDAO GROUP</span>
-          <p>国际化控股集团，根植香港，布局全球。围绕 AI 能源算力、物理智能、Web3 金融与资本构建协同生态。</p>
-          <strong>TEAM HUMAN</strong>
+      <div className="footer-shell">
+        <Reveal className="footer-about">
+          <div className="footer-about-copy-block">
+            <h2 className="footer-about-title">
+              <span>SKYDAO GROUP</span>
+            </h2>
+            <p className="footer-about-copy">
+              <span>立足香港，面向全球。</span>
+              <span>构建新一代数字金融基础设施。</span>
+              <br />
+              <span>以 AI、RWA 与 Web3 为核心，</span>
+              <span>连接资产、价值与未来金融。</span>
+            </p>
+            <strong className="footer-about-signature">TEAM HUMAN</strong>
+          </div>
+        </Reveal>
+
+        <div className="footer-main">
+          <div className="footer-column">
+            <p className="footer-label">业务版图</p>
+            {[
+              ['Central Gate 中央之门', '#central-gate'],
+              ['硅基智造 SGI', '#physical-ai'],
+              ['SkyDAO Wallet', '#wallet'],
+              ['SkyDAO Art', '#art'],
+              ['Web3 Finance', '#wallet'],
+              ['AIES 大会', '#aies'],
+            ].map(([label, href]) => <a key={label} href={href}>{label}</a>)}
+          </div>
+          <div className="footer-column">
+            <p className="footer-label">集团</p>
+            {['关于我们', '愿景与使命', '全球布局与合规', '联系我们'].map((item) => <a key={item} href="#about">{item}</a>)}
+          </div>
+          <div className="footer-column">
+            <p className="footer-label">联系</p>
+            <a href="mailto:operation@skydao.com">operation@skydao.com</a>
+            <a href="#about">X · @skydaogroup</a>
+            <span>香港铜锣湾景隆街 7 号<br />SkyDAO Building</span>
+          </div>
         </div>
-        <div className="footer-column">
-          <p className="footer-label">业务版图</p>
-          {['Central Gate 中央之门', '硅基智造 SGI', 'SkyDAO Wallet', 'SkyDAO Art', 'Web3 Finance', 'AIES 大会'].map((item) => <a key={item} href="#central-gate">{item}</a>)}
+
+        <div className="footer-bottom">
+          <span>© 2026 SkyDAO Group · 天道集团</span>
+          <span>构建硅碳共生文明 · Building a Silicon–Carbon Symbiotic Civilization</span>
         </div>
-        <div className="footer-column">
-          <p className="footer-label">集团</p>
-          {['关于我们', '愿景与使命', '全球布局与合规', '联系我们'].map((item) => <a key={item} href="#about">{item}</a>)}
-        </div>
-        <div className="footer-column">
-          <p className="footer-label">联系</p>
-          <a href="mailto:operation@skydao.com">operation@skydao.com</a>
-          <a href="#about">X · @skydaogroup</a>
-          <span>香港铜锣湾景隆街 7 号<br />SkyDAO Building</span>
-        </div>
-      </div>
-      <div className="footer-bottom">
-        <span>© 2026 SkyDAO Group · 天道集团</span>
-        <span>构建硅碳共生文明 · Building a Silicon–Carbon Symbiotic Civilization</span>
       </div>
     </footer>
   )

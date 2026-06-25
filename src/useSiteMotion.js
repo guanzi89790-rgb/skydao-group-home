@@ -254,23 +254,48 @@ export default function useSiteMotion(scope) {
         }
       })
 
-      gsap.fromTo(
-        '.footer-main > *',
-        { y: 70, autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 1.2,
-          stagger: 0.12,
-          ease: 'power3.out',
+      const footer = root.querySelector('.footer')
+      if (footer) {
+        const footerTimeline = gsap.timeline({
           scrollTrigger: {
-            trigger: '.footer',
-            start: 'top 82%',
+            trigger: footer,
+            start: 'top 80%',
             end: 'bottom 18%',
             toggleActions: 'restart reset restart reset',
           },
-        },
-      )
+        })
+
+        footerTimeline
+          .fromTo(
+            '.footer-about-title span',
+            { yPercent: 118, scaleX: 0.68, autoAlpha: 0, transformOrigin: 'left center' },
+            { yPercent: 0, scaleX: 1, autoAlpha: 1, duration: 2.05, stagger: 0.16, ease: 'expo.out' },
+          )
+          .fromTo(
+            '.footer-about-copy',
+            { y: 66, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1.42, ease: 'power3.out' },
+            0.55,
+          )
+          .fromTo(
+            '.footer-about-signature',
+            { y: 44, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1.16, ease: 'power3.out' },
+            0.92,
+          )
+          .fromTo(
+            '.footer-main > *',
+            { y: 78, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1.48, stagger: 0.2, ease: 'power3.out' },
+            1.12,
+          )
+          .fromTo(
+            '.footer-bottom',
+            { y: 40, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1.22, ease: 'power2.out' },
+            1.68,
+          )
+      }
     }, root)
 
     return () => {
