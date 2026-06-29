@@ -1,14 +1,24 @@
 import { useEffect, useRef, useState } from 'react'
 import useSiteMotion from './useSiteMotion.js'
+import CountUp from './CountUp.jsx'
 
-const navItems = [
-  ['Central Gate', '#central-gate'],
+const homeNavItems = [
+  ['Central Gate', '#/central-gate/definition'],
   ['硅基智造', '#physical-ai'],
   ['SkyDAO Wallet', '#wallet'],
   ['SkyDAO Art', '#art'],
   ['Web3 Finance', '#wallet'],
   ['AIES', '#aies'],
   ['About', '#about'],
+]
+
+const centralGateNavItems = [
+  ['Definition', '#/central-gate/definition', 'cg-definition'],
+  ['System', '#/central-gate/system', 'cg-system'],
+  ['Capacity', '#/central-gate/capacity', 'cg-capacity'],
+  ['AI Horizon', '#/central-gate/ai-horizon', 'cg-ai-horizon'],
+  ['Expansion', '#/central-gate/expansion', 'cg-expansion'],
+  ['Energy Base', '#/central-gate/energy-base', 'cg-energy-base'],
 ]
 
 const featureSections = [
@@ -134,8 +144,9 @@ const walletCards = [
   },
 ]
 
-function Header() {
+function Header({ page = 'home' }) {
   const [scrolled, setScrolled] = useState(false)
+  const navItems = homeNavItems
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 28)
@@ -150,7 +161,9 @@ function Header() {
         <span>SKYDAO</span>
       </a>
       <nav className="desktop-nav" aria-label="主导航">
-        {navItems.map(([label, href]) => <a key={label} href={href}>{label}</a>)}
+        {navItems.map(([label, href, target]) => (
+          <a key={label} href={href} data-scroll-target={target}>{label}</a>
+        ))}
       </nav>
       <a className="team-human" href="#about">TEAM HUMAN</a>
     </header>
@@ -242,7 +255,7 @@ function Hero() {
         <h2 className="hero-intro-item">中央之门</h2>
         <p className="hero-copy hero-intro-item">在吉尔吉斯斯坦，以「煤矿 — 坑口电厂 — 算力中心」垂直一体化，把每一度电直接转化为智能。这是整个集团的物理底座。</p>
         <div className="hero-actions hero-intro-item">
-          <ArrowButton href="#physical-ai">了解中央之门</ArrowButton>
+          <ArrowButton href="#/central-gate">了解中央之门</ArrowButton>
           <ArrowButton href="#about" secondary>集团价值链</ArrowButton>
         </div>
       </div>
@@ -257,13 +270,44 @@ const panelLinks = [
   ['Art', '#art'],
   ['AIES', '#aies'],
   ['About', '#about'],
+  ['Footer', '#footer'],
 ]
 
-function FullPageRail() {
-  const [activePanel, setActivePanel] = useState('central-gate')
+const centralGatePanelLinks = [
+  ['Definition', '#/central-gate/definition', 'cg-definition'],
+  ['System', '#/central-gate/system', 'cg-system'],
+  ['Capacity', '#/central-gate/capacity', 'cg-capacity'],
+  ['AI Horizon', '#/central-gate/ai-horizon', 'cg-ai-horizon'],
+  ['Expansion', '#/central-gate/expansion', 'cg-expansion'],
+  ['Energy Base', '#/central-gate/energy-base', 'cg-energy-base'],
+]
+
+function FullPageRail({ links = panelLinks, initialPanel = 'central-gate' }) {
+  const [activePanel, setActivePanel] = useState(initialPanel)
 
   useEffect(() => {
+    setActivePanel(initialPanel)
     const panels = [...document.querySelectorAll('.fullpage-panel')]
+    let animationFrame = 0
+
+    const updateActivePanel = () => {
+      window.cancelAnimationFrame(animationFrame)
+      animationFrame = window.requestAnimationFrame(() => {
+        const viewportCenter = window.innerHeight / 2
+        const active = panels
+          .map((panel) => {
+            const rect = panel.getBoundingClientRect()
+            return {
+              panel,
+              distance: Math.abs((rect.top + rect.bottom) / 2 - viewportCenter),
+            }
+          })
+          .sort((a, b) => a.distance - b.distance)[0]
+
+        if (active?.panel?.id) setActivePanel(active.panel.id)
+      })
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const active = entries
@@ -275,24 +319,231 @@ function FullPageRail() {
     )
 
     panels.forEach((panel) => observer.observe(panel))
-    return () => observer.disconnect()
-  }, [])
+    updateActivePanel()
+    window.addEventListener('scroll', updateActivePanel, { passive: true })
+    window.addEventListener('resize', updateActivePanel)
+
+    return () => {
+      observer.disconnect()
+      window.cancelAnimationFrame(animationFrame)
+      window.removeEventListener('scroll', updateActivePanel)
+      window.removeEventListener('resize', updateActivePanel)
+    }
+  }, [initialPanel, links])
 
   return (
     <nav className="fullpage-rail" aria-label="页面章节">
-      {panelLinks.map(([label, href], index) => (
+      {links.map(([label, href, target], index) => (
         <a
-          className={activePanel === href.slice(1) ? 'is-active' : ''}
+          className={activePanel === (target || href.slice(1)) ? 'is-active' : ''}
           href={href}
+          data-scroll-target={target}
           key={href}
           aria-label={`前往 ${label}`}
-          aria-current={activePanel === href.slice(1) ? 'true' : undefined}
+          aria-current={activePanel === (target || href.slice(1)) ? 'true' : undefined}
         >
           <span>{String(index + 1).padStart(2, '0')}</span>
           <i />
         </a>
       ))}
     </nav>
+  )
+}
+
+function CentralGatePage() {
+  return (
+    <main className="central-page">
+      <section className="hero central-detail-hero central-starship-hero fullpage-panel" id="cg-definition" data-panel-label="Definition">
+        <div className="central-detail-bg" aria-hidden="true">
+          <img src="/assets/central-gate/cg-energy-campus-20260626.png" alt="" />
+        </div>
+        <div className="central-detail-shade" aria-hidden="true" />
+        <div className="central-starship-copy">
+          <h1 className="central-starship-title hero-title-mask">
+            <span className="hero-title-inner">CENTRAL GATE</span>
+          </h1>
+          <p className="central-starship-subtitle hero-intro-item">AI ENERGY INFRASTRUCTURE NETWORK</p>
+          <p className="central-starship-caption hero-intro-item">3GW级AI算力基础设施系统 · 中央之门</p>
+        </div>
+        <p className="central-panel-index hero-intro-item">01 / 06</p>
+      </section>
+
+      <CentralGateSection
+        id="cg-system"
+        index="02 / 06"
+        eyebrow="SYSTEM · 能源 × 算力一体化系统"
+        title="能源 × 算力一体化系统"
+        background="/assets/central-gate/cg-dc-power-corridor-20260626.png"
+        tone="left"
+      >
+        <div className="central-flow" aria-label="系统运行结构">
+          {['能源生产', '电力调度', '800V直流输配', 'AI算力集群'].map((item) => (
+            <span className="central-flow-step" key={item}>{item}</span>
+          ))}
+        </div>
+        <ul className="central-component-grid">
+          {['超超临界自备电力系统', '800V直流AI供电架构', 'GPU高密度计算集群', '模块化扩展基础设施'].map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </CentralGateSection>
+
+      <CentralGateSection
+        id="cg-capacity"
+        index="03 / 06"
+        eyebrow="CAPACITY · 工业级AI计算网络"
+        title="工业级AI计算网络"
+        background="/assets/central-gate/cg-gpu-hall-20260626.png"
+        tone="counter"
+      >
+        <div className="central-counter-band" aria-label="已具备能力">
+          <Metric to={300} suffix="MW" label="起步部署" variant="counter" />
+          <Metric to={30000} suffix="+" separator="," label="GPU算力规模" variant="counter" />
+          <Metric prefix="< " to={1.2} label="PUE" variant="counter" />
+        </div>
+        <p className="central-output">支持高密度AI训练与推理 · 系统输出：持续运行的工业级AI计算能力</p>
+      </CentralGateSection>
+
+      <CentralGateSection
+        id="cg-ai-horizon"
+        index="04 / 06"
+        eyebrow="AI HORIZON · 认知驱动核心"
+        title="AI进入智能体时代"
+        background="/assets/central-gate/cg-highland-grid-20260626.png"
+        tone="horizon"
+      >
+        <div className="central-horizon-brief">
+          <p>
+            AI正在从模型能力进入自主执行阶段。芯片是算力的大脑，能源是算力的心脏。
+          </p>
+          <p>
+            当AI运行开始受能源结构约束，能源、算力与数据系统正在形成新的工业层。
+          </p>
+          <ul className="central-horizon-rows" aria-label="AI基础结构判断">
+            <li><span>COMPUTE</span><strong>芯片驱动智能执行</strong></li>
+            <li><span>ENERGY</span><strong>能源决定算力边界</strong></li>
+            <li><span>INFRASTRUCTURE</span><strong>CENTRAL GATE 提供运行基础</strong></li>
+          </ul>
+          <strong className="central-horizon-lock">我们构建的不是AI应用，而是AI的基础结构</strong>
+        </div>
+      </CentralGateSection>
+
+      <CentralGateSection
+        id="cg-expansion"
+        index="05 / 06"
+        eyebrow="EXPANSION · 模块化AI基础设施网络"
+        title="模块化AI基础设施网络"
+        background="/assets/central-gate/cg-modular-buildout-20260626.png"
+        tone="left"
+      >
+        <div className="central-expansion-overview">
+          <p>
+            模块化AI基础设施以工业节奏滚动建设。每个新增模块独立交付，并持续并入统一能源与算力网络。
+          </p>
+        </div>
+        <ul className="central-expansion-list">
+          <li>
+            <span>新增模块</span>
+            <strong>
+              <CountUp from={0} to={300} duration={0.85} className="count-up-text" />
+              <span className="central-number-join">–</span>
+              <CountUp from={0} to={600} duration={0.95} className="count-up-text" />
+              <span className="central-number-unit">MW</span>
+            </strong>
+          </li>
+          <li>
+            <span>目标规模</span>
+            <strong>
+              <CountUp from={0} to={3} duration={0.9} className="count-up-text" />
+              <span className="central-number-unit">GW</span>
+            </strong>
+          </li>
+          <li><span>建设体系</span><strong>Rolling Build</strong></li>
+        </ul>
+        <p className="central-system-note">连续扩展 · 可复制 · 可规模化</p>
+      </CentralGateSection>
+
+      <CentralGateSection
+        id="cg-energy-base"
+        index="06 / 06"
+        eyebrow="ENERGY BASE · 现实收束"
+        title="能源决定算力的边界"
+        background="/assets/central-gate/cg-highland-grid-20260626.png"
+        tone="final"
+      >
+        <div className="central-final-grid">
+          <div>
+            <p className="central-kicker">能源底座</p>
+            <ul>
+              <li>自建超超临界电力系统</li>
+              <li>
+                <span className="central-inline-number">$</span>
+                <CountUp from={0} to={0.03} duration={0.8} className="central-inline-number" />
+                <span className="central-inline-number">–</span>
+                <CountUp from={0} to={0.05} duration={0.9} className="central-inline-number" />
+                <span className="central-inline-number">/kWh</span>
+                长期成本结构
+              </li>
+              <li><CountUp from={0} to={30} duration={0.85} className="central-inline-number" />年能源保障体系</li>
+              <li>完全独立电网系统</li>
+            </ul>
+          </div>
+          <div>
+            <p className="central-kicker">部署环境</p>
+            <ul>
+              <li>吉尔吉斯斯坦 · 奥什区域</li>
+              <li><CountUp from={0} to={3400} separator="," duration={0.9} className="central-inline-number" />米高海拔自然冷却</li>
+              <li><CountUp from={0} to={1200} separator="," duration={0.9} className="central-inline-number" />公顷扩展空间</li>
+              <li>独立数据与能源主权环境</li>
+            </ul>
+          </div>
+        </div>
+        <div className="central-definition-lock">
+          <span>CENTRAL GATE</span>
+          <p>不是数据中心，不是能源项目，不是AI工厂。</p>
+          <strong>它是：AI时代的能源基础设施系统</strong>
+        </div>
+        <p className="central-footer-mark">© CENTRAL GATE · 2026</p>
+      </CentralGateSection>
+    </main>
+  )
+}
+
+function CentralGateSection({ id, index, eyebrow, title, background, tone = 'center', children }) {
+  return (
+    <section
+      className={`central-detail-panel feature-section fullpage-panel central-${tone}`}
+      id={id}
+      data-panel-label={title}
+      style={{ '--feature-image': `url(${background})` }}
+    >
+      <div className="central-detail-shade" aria-hidden="true" />
+      <Reveal className="central-detail-content">
+        <p className="eyebrow">{eyebrow}</p>
+        <h2>{title}</h2>
+        <div className="central-detail-body">{children}</div>
+      </Reveal>
+      <p className="central-panel-index">{index}</p>
+    </section>
+  )
+}
+
+function Metric({ to, label, prefix = '', suffix = '', separator = '', text, variant = 'table' }) {
+  return (
+    <div className={`central-metric central-metric-${variant}`}>
+      <strong>
+        {text ? (
+          text
+        ) : (
+          <>
+            {prefix && <span className="central-number-prefix">{prefix}</span>}
+            <CountUp from={0} to={to} separator={separator} duration={0.95} className="count-up-text" />
+            {suffix && <span className="central-number-unit">{suffix}</span>}
+          </>
+        )}
+      </strong>
+      <span>{label}</span>
+    </div>
   )
 }
 
@@ -547,7 +798,7 @@ function Footer() {
           <div className="footer-column">
             <p className="footer-label">业务版图</p>
             {[
-              ['Central Gate 中央之门', '#central-gate'],
+              ['Central Gate 中央之门', '#/central-gate/definition'],
               ['硅基智造 SGI', '#physical-ai'],
               ['SkyDAO Wallet', '#wallet'],
               ['SkyDAO Art', '#art'],
@@ -567,7 +818,7 @@ function Footer() {
           </div>
         </div>
 
-        <div className="footer-bottom">
+        <div className="footer-page-bottom">
           <span>© 2026 SkyDAO Group · 天道集团</span>
           <span>构建硅碳共生文明 · Building a Silicon–Carbon Symbiotic Civilization</span>
         </div>
@@ -576,20 +827,95 @@ function Footer() {
   )
 }
 
+function OfficialFooter() {
+  const footerLinks = [
+    ['錢包', '#wallet'],
+    ['卡片', '#wallet'],
+    ['支付服務', '#wallet'],
+    ['聯盟計劃', '#about'],
+    ['幫助中心', '#about'],
+    ['關於我們', '#about'],
+    ['APP下載', '#about'],
+  ]
+
+  return (
+    <section className="official-footer fullpage-panel" id="footer" data-panel-label="Footer">
+      <div className="official-footer-shell">
+        <div className="official-footer-top">
+          <div className="official-footer-brand">
+            <img src="/assets/brand/skydao-logo-light.svg" alt="SkyDAO" />
+            <p>打通數位與現實，重塑未來金融邊界</p>
+          </div>
+          <nav className="official-footer-nav" aria-label="頁腳導航">
+            {footerLinks.map(([label, href]) => <a key={label} href={href}>{label}</a>)}
+          </nav>
+        </div>
+
+        <div className="official-footer-bottom">
+          <div className="official-footer-legal">
+            <span>Copyright © 2025 SkyDAO - All rights reserved.</span>
+            <a href="#footer">隱私政策</a>
+            <a href="#footer">用戶協議</a>
+          </div>
+
+          <div className="official-footer-social" aria-label="SkyDAO social links">
+            <a href="mailto:operation@skydao.com" aria-label="Email" className="official-footer-social-link">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="4.5" y="6.5" width="15" height="11" rx="1.8" />
+                <path d="m5.25 7.5 6.75 5 6.75-5" />
+              </svg>
+            </a>
+            <a href="#footer" aria-label="X" className="official-footer-social-link">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m5.25 4.75 13.5 14.5M18.75 4.75 5.25 19.25" />
+              </svg>
+            </a>
+            <a href="#footer" aria-label="Telegram" className="official-footer-social-link">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20 5.25 4.5 11.3l5.85 2.05L16.7 8.2l-4.95 6.28 5.15 3.95L20 5.25Z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function App() {
   const appRef = useRef(null)
-  useSiteMotion(appRef)
+  const [page, setPage] = useState(() => (window.location.hash.startsWith('#/central-gate') ? 'central-gate' : 'home'))
+  useSiteMotion(appRef, page)
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setPage(window.location.hash.startsWith('#/central-gate') ? 'central-gate' : 'home')
+    }
+
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
 
   return (
     <div className="site-shell" ref={appRef}>
       <OpeningSequence />
-      <Header />
-      <FullPageRail />
-      <main>
-        <Hero />
-        {featureSections.map((item) => <FeatureSection key={item.id} item={item} />)}
-      </main>
-      <Footer />
+      <Header page={page} />
+      <FullPageRail
+        links={page === 'central-gate' ? centralGatePanelLinks : panelLinks}
+        initialPanel={page === 'central-gate' ? 'cg-definition' : 'central-gate'}
+      />
+      {page === 'central-gate' ? (
+        <CentralGatePage />
+      ) : (
+        <>
+          <main>
+            <Hero />
+            {featureSections.map((item) => <FeatureSection key={item.id} item={item} />)}
+          </main>
+          <Footer />
+          <OfficialFooter />
+        </>
+      )}
     </div>
   )
 }

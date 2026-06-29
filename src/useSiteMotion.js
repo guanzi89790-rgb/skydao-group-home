@@ -5,7 +5,7 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
-export default function useSiteMotion(scope) {
+export default function useSiteMotion(scope, motionKey = 'home') {
   useLayoutEffect(() => {
     const root = scope.current
     if (!root) return undefined
@@ -24,6 +24,32 @@ export default function useSiteMotion(scope) {
     let openingFallbackTimer
     let openingFinished = false
     window.scrollTo(0, 0)
+
+    const initialPanelIndexFromHash = () => {
+      if (motionKey !== 'central-gate') {
+        const targetId = window.location.hash.replace('#', '')
+        const targetIndex = panels.findIndex((panel) => panel.id === targetId)
+        return targetIndex > -1 ? targetIndex : 0
+      }
+
+      const route = window.location.hash.replace('#/central-gate/', '').replace('#/central-gate', 'definition')
+      const targetId = `cg-${route || 'definition'}`
+      const targetIndex = panels.findIndex((panel) => panel.id === targetId)
+      return targetIndex > -1 ? targetIndex : 0
+    }
+
+    const jumpToInitialPanel = () => {
+      const targetIndex = initialPanelIndexFromHash()
+      if (!panels[targetIndex]) return
+      window.scrollTo(0, panels[targetIndex].offsetTop)
+      ScrollTrigger.update()
+    }
+
+    const settleInitialPanel = () => {
+      window.requestAnimationFrame(jumpToInitialPanel)
+      window.setTimeout(jumpToInitialPanel, 80)
+      window.setTimeout(jumpToInitialPanel, 320)
+    }
 
     const closestPanelIndex = () => panels.reduce((closest, panel, index) => (
       Math.abs(panel.offsetTop - window.scrollY) < Math.abs(panels[closest].offsetTop - window.scrollY)
@@ -84,10 +110,15 @@ export default function useSiteMotion(scope) {
       if (!fullPageEnabled || !usesCustomScroll || !(event.target instanceof Element)) return
       const anchor = event.target.closest('a[href^="#"]')
       if (!anchor) return
-      const target = panels.find((panel) => `#${panel.id}` === anchor.getAttribute('href'))
+      const href = anchor.getAttribute('href')
+      if (href?.startsWith('#/')) return
+      const scrollTarget = anchor.getAttribute('data-scroll-target')
+      const target = panels.find((panel) => (
+        scrollTarget ? panel.id === scrollTarget : `#${panel.id}` === href
+      ))
       if (!target) return
       event.preventDefault()
-      window.history.replaceState(null, '', `#${target.id}`)
+      window.history.replaceState(null, '', href)
       goToPanel(panels.indexOf(target))
     }
 
@@ -108,10 +139,12 @@ export default function useSiteMotion(scope) {
         gsap.set('.opening-sequence', { display: 'none' })
         gsap.set('.hero-title-inner, .hero-intro-item, .site-header', { clearProps: 'all' })
         document.documentElement.classList.add('fullpage-ready')
+        settleInitialPanel()
         return
       }
 
       document.body.style.overflow = 'hidden'
+      const skipOpening = motionKey === 'central-gate'
 
       const finishOpening = () => {
         if (openingFinished) return
@@ -122,38 +155,45 @@ export default function useSiteMotion(scope) {
         document.documentElement.classList.add('fullpage-ready')
         document.documentElement.classList.add('fullpage-controlled')
         ScrollTrigger.refresh()
+        settleInitialPanel()
       }
 
-      gsap.set('.site-header', { yPercent: -120, autoAlpha: 0 })
-      gsap.set('.hero-title-inner', { yPercent: 118, scaleX: 0.68, transformOrigin: 'left center' })
-      gsap.set('.hero-intro-item', { y: 34, autoAlpha: 0 })
-      gsap.set('.opening-brand-inner', { yPercent: 120, autoAlpha: 0 })
-      gsap.set('.opening-logo-inner', { yPercent: 115, scale: 0.72, autoAlpha: 0, transformOrigin: 'center center' })
-      gsap.set('.opening-progress-bar', { scaleX: 0, transformOrigin: 'left center' })
-
-      const opening = gsap.timeline({
-        defaults: { ease: 'power4.inOut' },
-        onComplete: finishOpening,
-      })
-
-      opening
-        .to('.opening-logo-inner', { yPercent: 0, scale: 1, autoAlpha: 1, duration: 1.08, ease: 'expo.out' }, 0.08)
-        .to('.opening-brand-inner', { yPercent: 0, autoAlpha: 1, duration: 1, ease: 'expo.out' }, 0.2)
-        .to('.opening-progress-bar', { scaleX: 1, duration: 2.2, ease: 'power3.inOut' }, 0.35)
-        .to('.opening-logo-inner', { yPercent: -120, scale: 0.94, autoAlpha: 0, duration: 0.76, ease: 'power3.in' }, 2.64)
-        .to('.opening-brand-inner', { yPercent: -120, autoAlpha: 0, duration: 0.68, ease: 'power3.in' }, 2.68)
-        .to('.opening-curtain-top', { yPercent: -102, duration: 1.22, ease: 'expo.inOut' }, 3.02)
-        .to('.opening-curtain-bottom', { yPercent: 102, duration: 1.22, ease: 'expo.inOut' }, 3.02)
-        .to('.opening-sequence', { autoAlpha: 0, duration: 0.25, pointerEvents: 'none' }, 4.02)
-        .to('.site-header', { yPercent: 0, autoAlpha: 1, duration: 1.05, ease: 'expo.out' }, 3.6)
-        .to('.hero-title-inner', { yPercent: 0, scaleX: 1, duration: 1.6, ease: 'expo.out' }, 3.48)
-        .to('.hero-intro-item', { y: 0, autoAlpha: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' }, 3.88)
-
-      openingFallbackTimer = window.setTimeout(() => {
-        gsap.set('.opening-sequence', { autoAlpha: 0, pointerEvents: 'none' })
+      if (skipOpening) {
+        gsap.set('.opening-sequence', { display: 'none', autoAlpha: 0, pointerEvents: 'none' })
         gsap.set('.site-header, .hero-title-inner, .hero-intro-item', { clearProps: 'all' })
         finishOpening()
-      }, 6000)
+      } else {
+        gsap.set('.site-header', { yPercent: -120, autoAlpha: 0 })
+        gsap.set('.hero-title-inner', { yPercent: 118, scaleX: 0.68, transformOrigin: 'left center' })
+        gsap.set('.hero-intro-item', { y: 34, autoAlpha: 0 })
+        gsap.set('.opening-brand-inner', { yPercent: 120, autoAlpha: 0 })
+        gsap.set('.opening-logo-inner', { yPercent: 115, scale: 0.72, autoAlpha: 0, transformOrigin: 'center center' })
+        gsap.set('.opening-progress-bar', { scaleX: 0, transformOrigin: 'left center' })
+
+        const opening = gsap.timeline({
+          defaults: { ease: 'power4.inOut' },
+          onComplete: finishOpening,
+        })
+
+        opening
+          .to('.opening-logo-inner', { yPercent: 0, scale: 1, autoAlpha: 1, duration: 1.08, ease: 'expo.out' }, 0.08)
+          .to('.opening-brand-inner', { yPercent: 0, autoAlpha: 1, duration: 1, ease: 'expo.out' }, 0.2)
+          .to('.opening-progress-bar', { scaleX: 1, duration: 2.2, ease: 'power3.inOut' }, 0.35)
+          .to('.opening-logo-inner', { yPercent: -120, scale: 0.94, autoAlpha: 0, duration: 0.76, ease: 'power3.in' }, 2.64)
+          .to('.opening-brand-inner', { yPercent: -120, autoAlpha: 0, duration: 0.68, ease: 'power3.in' }, 2.68)
+          .to('.opening-curtain-top', { yPercent: -102, duration: 1.22, ease: 'expo.inOut' }, 3.02)
+          .to('.opening-curtain-bottom', { yPercent: 102, duration: 1.22, ease: 'expo.inOut' }, 3.02)
+          .to('.opening-sequence', { autoAlpha: 0, duration: 0.25, pointerEvents: 'none' }, 4.02)
+          .to('.site-header', { yPercent: 0, autoAlpha: 1, duration: 1.05, ease: 'expo.out' }, 3.6)
+          .to('.hero-title-inner', { yPercent: 0, scaleX: 1, duration: 1.6, ease: 'expo.out' }, 3.48)
+          .to('.hero-intro-item', { y: 0, autoAlpha: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' }, 3.88)
+
+        openingFallbackTimer = window.setTimeout(() => {
+          gsap.set('.opening-sequence', { autoAlpha: 0, pointerEvents: 'none' })
+          gsap.set('.site-header, .hero-title-inner, .hero-intro-item', { clearProps: 'all' })
+          finishOpening()
+        }, 6000)
+      }
 
       const heroReturn = gsap.timeline({ paused: true })
         .fromTo(
@@ -179,11 +219,12 @@ export default function useSiteMotion(scope) {
       gsap.utils.toArray('.feature-section').forEach((section) => {
         const title = section.querySelector('h2')
         const eyebrow = section.querySelector('.eyebrow')
-        const supporting = section.querySelectorAll('h3, .feature-copy, .gallery-hint')
+        const supporting = section.querySelectorAll('h3, .feature-copy, .gallery-hint, .central-detail-body > *, .central-detail-list li, .central-actions, .central-panel-index')
         const cta = section.querySelector('.button')
         const stage = section.querySelector('.physical-product-grid, .wallet-card-stage, .art-card-stage')
         const cardItems = section.querySelectorAll('.physical-product-card, .wallet-card, .art-slide')
         const isPhysical = section.classList.contains('physical-ai-section')
+        const isCentralDetail = section.classList.contains('central-detail-panel')
         const centered = !section.classList.contains('feature-left')
 
         const timeline = gsap.timeline({
@@ -198,25 +239,26 @@ export default function useSiteMotion(scope) {
         timeline
           .fromTo(
             eyebrow,
-            { y: 34, autoAlpha: 0, letterSpacing: '0.48em' },
-            { y: 0, autoAlpha: 1, letterSpacing: '0.22em', duration: 1.05, ease: 'power3.out' },
+            { y: isCentralDetail ? 18 : 34, autoAlpha: 0, letterSpacing: isCentralDetail ? '0.28em' : '0.48em' },
+            { y: 0, autoAlpha: 1, letterSpacing: '0.22em', duration: isCentralDetail ? 0.82 : 1.05, ease: 'power3.out' },
           )
           .fromTo(
             title,
             {
-              xPercent: centered ? -26 : -42,
-              scaleX: 0.62,
+              xPercent: isCentralDetail ? 0 : (centered ? -26 : -42),
+              y: isCentralDetail ? 26 : 0,
+              scaleX: isCentralDetail ? 1 : 0.62,
               autoAlpha: 0,
               transformOrigin: centered ? 'center center' : 'left center',
             },
-            { xPercent: 0, scaleX: 1, autoAlpha: 1, duration: 1.55, ease: 'expo.out' },
+            { xPercent: 0, y: 0, scaleX: 1, autoAlpha: 1, duration: isCentralDetail ? 0.95 : 1.55, ease: isCentralDetail ? 'power3.out' : 'expo.out' },
             0.08,
           )
           .fromTo(
             supporting,
-            { y: 56, autoAlpha: 0 },
-            { y: 0, autoAlpha: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' },
-            0.5,
+            { y: isCentralDetail ? 24 : 56, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: isCentralDetail ? 0.82 : 1.05, stagger: isCentralDetail ? 0.08 : 0.12, ease: 'power3.out' },
+            isCentralDetail ? 0.36 : 0.5,
           )
 
         if (stage) {
@@ -311,5 +353,5 @@ export default function useSiteMotion(scope) {
       scrollTween?.kill()
       context.revert()
     }
-  }, [scope])
+  }, [scope, motionKey])
 }
