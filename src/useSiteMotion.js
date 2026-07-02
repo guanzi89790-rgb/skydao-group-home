@@ -26,6 +26,26 @@ export default function useSiteMotion(scope, motionKey = 'home') {
     window.scrollTo(0, 0)
 
     const initialPanelIndexFromHash = () => {
+      if (motionKey === 'wallet') {
+        const route = window.location.hash.replace('#/wallet/', '').replace('#/wallet', 'overview')
+        const walletRouteMap = {
+          overview: 'wallet-overview',
+          everything: 'wallet-everything',
+          wallet: 'wallet-wallet',
+          wealth: 'wallet-wealth',
+          visa: 'wallet-visa',
+          flow: 'wallet-flow',
+          global: 'wallet-global',
+          security: 'wallet-security',
+          compliance: 'wallet-compliance',
+          compare: 'wallet-compare',
+          faq: 'wallet-faq',
+          download: 'wallet-download',
+        }
+        const targetIndex = panels.findIndex((panel) => panel.id === walletRouteMap[route])
+        return targetIndex > -1 ? targetIndex : 0
+      }
+
       if (motionKey !== 'central-gate') {
         const targetId = window.location.hash.replace('#', '')
         const targetIndex = panels.findIndex((panel) => panel.id === targetId)
@@ -41,6 +61,8 @@ export default function useSiteMotion(scope, motionKey = 'home') {
     const jumpToInitialPanel = () => {
       const targetIndex = initialPanelIndexFromHash()
       if (!panels[targetIndex]) return
+      root.dataset.activePanel = panels[targetIndex].id
+      root.dataset.visualPanel = panels[targetIndex].id
       window.scrollTo(0, panels[targetIndex].offsetTop)
       ScrollTrigger.update()
     }
@@ -69,6 +91,11 @@ export default function useSiteMotion(scope, motionKey = 'home') {
     const goToPanel = (index) => {
       const targetIndex = Math.max(0, Math.min(panels.length - 1, index))
       if (!panels[targetIndex]) return
+      const targetPanelId = panels[targetIndex].id
+      const persistentPhonePanels = ['wallet-wallet', 'wallet-wealth']
+      const shouldKeepPhone = persistentPhonePanels.includes(root.dataset.visualPanel) && persistentPhonePanels.includes(targetPanelId)
+      root.dataset.activePanel = targetPanelId
+      if (motionKey === 'wallet' && !shouldKeepPhone) root.dataset.visualPanel = ''
       scrollLocked = true
       transitionComplete = false
       wheelAccumulator = 0
@@ -79,6 +106,7 @@ export default function useSiteMotion(scope, motionKey = 'home') {
         ease: 'power2.inOut',
         overwrite: 'auto',
         onComplete: () => {
+          root.dataset.visualPanel = targetPanelId
           transitionComplete = true
           scheduleGestureRelease()
           ScrollTrigger.update()
@@ -111,7 +139,6 @@ export default function useSiteMotion(scope, motionKey = 'home') {
       const anchor = event.target.closest('a[href^="#"]')
       if (!anchor) return
       const href = anchor.getAttribute('href')
-      if (href?.startsWith('#/')) return
       const scrollTarget = anchor.getAttribute('data-scroll-target')
       const target = panels.find((panel) => (
         scrollTarget ? panel.id === scrollTarget : `#${panel.id}` === href
@@ -130,21 +157,27 @@ export default function useSiteMotion(scope, motionKey = 'home') {
       if (!scrollLocked) goToPanel(closestPanelIndex() + (isNext ? 1 : -1))
     }
 
+    const onRouteHashChange = () => {
+      const targetIndex = initialPanelIndexFromHash()
+      if (targetIndex > -1 && panels[targetIndex]) goToPanel(targetIndex)
+    }
+
     window.addEventListener('wheel', onWheel, { passive: false })
     window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('hashchange', onRouteHashChange)
     root.addEventListener('click', onAnchorClick)
 
     const context = gsap.context(() => {
       if (prefersReducedMotion) {
         gsap.set('.opening-sequence', { display: 'none' })
-        gsap.set('.hero-title-inner, .hero-intro-item, .site-header', { clearProps: 'all' })
+        gsap.set(motionKey === 'home' ? '.hero-title-inner, .hero-intro-item, .site-header' : '.site-header', { clearProps: 'all' })
         document.documentElement.classList.add('fullpage-ready')
         settleInitialPanel()
         return
       }
 
       document.body.style.overflow = 'hidden'
-      const skipOpening = motionKey === 'central-gate'
+      const skipOpening = motionKey !== 'home'
 
       const finishOpening = () => {
         if (openingFinished) return
@@ -160,12 +193,19 @@ export default function useSiteMotion(scope, motionKey = 'home') {
 
       if (skipOpening) {
         gsap.set('.opening-sequence', { display: 'none', autoAlpha: 0, pointerEvents: 'none' })
-        gsap.set('.site-header, .hero-title-inner, .hero-intro-item', { clearProps: 'all' })
+        gsap.set('.site-header', { clearProps: 'all' })
         finishOpening()
       } else {
         gsap.set('.site-header', { yPercent: -120, autoAlpha: 0 })
-        gsap.set('.hero-title-inner', { yPercent: 118, scaleX: 0.68, transformOrigin: 'left center' })
-        gsap.set('.hero-intro-item', { y: 34, autoAlpha: 0 })
+        if (motionKey === 'home') {
+          gsap.set('.hero-title-inner', { yPercent: 118, scaleX: 0.68, transformOrigin: 'left center' })
+          gsap.set('.hero-intro-item', { y: 34, autoAlpha: 0 })
+        }
+        if (motionKey === 'wallet') {
+          gsap.set('.wallet-clean-hero .wallet-clean-hero-copy p', { y: 34, autoAlpha: 0 })
+          gsap.set('.wallet-clean-hero .wallet-clean-hero-copy h1', { yPercent: 82, scaleX: 0.72, autoAlpha: 0, transformOrigin: 'left center' })
+          gsap.set('.wallet-clean-hero .wallet-clean-hero-copy > span, .wallet-clean-hero .wallet-clean-actions', { y: 34, autoAlpha: 0 })
+        }
         gsap.set('.opening-brand-inner', { yPercent: 120, autoAlpha: 0 })
         gsap.set('.opening-logo-inner', { yPercent: 115, scale: 0.72, autoAlpha: 0, transformOrigin: 'center center' })
         gsap.set('.opening-progress-bar', { scaleX: 0, transformOrigin: 'left center' })
@@ -185,36 +225,108 @@ export default function useSiteMotion(scope, motionKey = 'home') {
           .to('.opening-curtain-bottom', { yPercent: 102, duration: 1.22, ease: 'expo.inOut' }, 3.02)
           .to('.opening-sequence', { autoAlpha: 0, duration: 0.25, pointerEvents: 'none' }, 4.02)
           .to('.site-header', { yPercent: 0, autoAlpha: 1, duration: 1.05, ease: 'expo.out' }, 3.6)
-          .to('.hero-title-inner', { yPercent: 0, scaleX: 1, duration: 1.6, ease: 'expo.out' }, 3.48)
-          .to('.hero-intro-item', { y: 0, autoAlpha: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' }, 3.88)
+
+        if (motionKey === 'home') {
+          opening
+            .to('.hero-title-inner', { yPercent: 0, scaleX: 1, duration: 1.6, ease: 'expo.out' }, 3.48)
+            .to('.hero-intro-item', { y: 0, autoAlpha: 1, duration: 1.05, stagger: 0.12, ease: 'power3.out' }, 3.88)
+        }
+
+        if (motionKey === 'wallet') {
+          opening
+            .to('.wallet-clean-hero .wallet-clean-hero-copy h1', { yPercent: 0, scaleX: 1, autoAlpha: 1, duration: 1.35, ease: 'expo.out' }, 3.48)
+            .to('.wallet-clean-hero .wallet-clean-hero-copy p', { y: 0, autoAlpha: 1, duration: 0.78, ease: 'power3.out' }, 3.68)
+            .to('.wallet-clean-hero .wallet-clean-hero-copy > span, .wallet-clean-hero .wallet-clean-actions', { y: 0, autoAlpha: 1, duration: 0.9, stagger: 0.1, ease: 'power3.out' }, 3.88)
+        }
 
         openingFallbackTimer = window.setTimeout(() => {
           gsap.set('.opening-sequence', { autoAlpha: 0, pointerEvents: 'none' })
-          gsap.set('.site-header, .hero-title-inner, .hero-intro-item', { clearProps: 'all' })
+          gsap.set('.site-header, .hero-title-inner, .hero-intro-item, .wallet-clean-hero .wallet-clean-hero-copy > *', { clearProps: 'all' })
           finishOpening()
         }, 6000)
       }
 
-      const heroReturn = gsap.timeline({ paused: true })
-        .fromTo(
-          '.hero-title-inner',
-          { yPercent: 82, scaleX: 0.76, transformOrigin: 'left center' },
-          { yPercent: 0, scaleX: 1, duration: 1.15, ease: 'expo.out', immediateRender: false },
-        )
-        .fromTo(
-          '.hero-intro-item',
-          { y: 28, autoAlpha: 0 },
-          { y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.08, ease: 'power2.out', immediateRender: false },
-          0.22,
-        )
+      if (motionKey === 'home') {
+        const heroReturn = gsap.timeline({ paused: true })
+          .fromTo(
+            '.hero-title-inner',
+            { yPercent: 82, scaleX: 0.76, transformOrigin: 'left center' },
+            { yPercent: 0, scaleX: 1, duration: 1.15, ease: 'expo.out', immediateRender: false },
+          )
+          .fromTo(
+            '.hero-intro-item',
+            { y: 28, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.08, ease: 'power2.out', immediateRender: false },
+            0.22,
+          )
 
-      ScrollTrigger.create({
-        trigger: '.hero',
-        start: 'top 76%',
-        end: 'bottom 24%',
-        onEnterBack: () => heroReturn.restart(),
-        onLeave: () => heroReturn.pause(0),
-      })
+        ScrollTrigger.create({
+          trigger: '.hero',
+          start: 'top 76%',
+          end: 'bottom 24%',
+          onEnterBack: () => heroReturn.restart(),
+          onLeave: () => heroReturn.pause(0),
+        })
+      }
+
+      if (motionKey === 'wallet') {
+        gsap.timeline()
+          .fromTo(
+            '.wallet-clean-hero .wallet-clean-hero-copy p',
+            { y: 26, autoAlpha: 0, letterSpacing: '0.16em' },
+            { y: 0, autoAlpha: 1, letterSpacing: '0.06em', duration: 0.78, ease: 'power3.out' },
+          )
+          .fromTo(
+            '.wallet-clean-hero .wallet-clean-hero-copy h1',
+            { y: 38, scaleX: 0.82, autoAlpha: 0, transformOrigin: 'left center' },
+            { y: 0, scaleX: 1, autoAlpha: 1, duration: 1.08, ease: 'expo.out' },
+            0.08,
+          )
+          .fromTo(
+            '.wallet-clean-hero .wallet-clean-hero-copy > span, .wallet-clean-hero .wallet-clean-actions',
+            { y: 30, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.82, stagger: 0.1, ease: 'power3.out' },
+            0.48,
+          )
+
+        gsap.utils.toArray('.wallet-rev-page .fullpage-panel:not(.wallet-clean-hero)').forEach((section) => {
+          const items = section.querySelectorAll('.wallet-clean-heading > *, .wallet-center-copy > *, .wallet-wealth-copy > *, .wallet-visa-copy > *, .wallet-global-copy > *, .wallet-faq-copy > *, .wallet-clean-hero-copy > *, .wallet-clean-feature-row article, .wallet-clean-everything-button, .wallet-everything-carousel, .wallet-everything-dots, .wallet-clean-product-line > *, .wallet-clean-yield-card, .wallet-clean-card-scene > *, .wallet-clean-flow-line > *, .wallet-clean-map, .wallet-clean-security-panel, .wallet-clean-pills span, .wallet-clean-compare-table > *, .wallet-clean-faq article, .wallet-clean-download-card > *, .wallet-download-qr-card, .wallet-visa-visual, .wallet-global-visual, .wallet-security-visual, .wallet-wealth-strip, .wallet-app-device, .wallet-token-cloud img')
+          if (!items.length) return
+
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 76%',
+              end: 'bottom 24%',
+              toggleActions: 'restart reset restart reset',
+            },
+          }).fromTo(
+            items,
+            { y: 34, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.86, stagger: 0.08, ease: 'power3.out' },
+          )
+        })
+
+        const wealthCopy = root.querySelector('.wallet-clean-wealth .wallet-wealth-copy')
+        if (wealthCopy) {
+          gsap.fromTo(
+            wealthCopy,
+            { x: 120, autoAlpha: 0 },
+            {
+              x: 0,
+              autoAlpha: 1,
+              duration: 1,
+              ease: 'expo.out',
+              scrollTrigger: {
+                trigger: '.wallet-clean-wealth',
+                start: 'top 76%',
+                end: 'bottom 24%',
+                toggleActions: 'restart reset restart reset',
+              },
+            },
+          )
+        }
+      }
 
       gsap.utils.toArray('.feature-section').forEach((section) => {
         const title = section.querySelector('h2')
@@ -346,6 +458,7 @@ export default function useSiteMotion(scope, motionKey = 'home') {
       document.documentElement.classList.remove('fullpage-controlled')
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('hashchange', onRouteHashChange)
       root.removeEventListener('click', onAnchorClick)
       window.clearTimeout(gestureReleaseTimer)
       window.clearTimeout(wheelResetTimer)
