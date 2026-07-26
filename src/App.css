@@ -1,13 +1,1631 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500;600&family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;600&display=swap');
 
 :root {
-  font-family: Inter, "Noto Sans SC", Arial, sans-serif;
+  font-family: Inter, "Noto Sans SC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #f5f7f8;
   background: #040607;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  --color-void-black: #000000;
+  --color-pure-white: #ffffff;
+  --color-charcoal: #202020;
+  --color-lamp-cream: #f5f5f0;
+  --font-visueltpro: 'VisueltPro', Inter, "Noto Sans SC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-bradford: 'Bradford', Georgia, "Times New Roman", serif;
   --page-x: clamp(44px, 5vw, 96px);
   --line: rgba(255,255,255,.14);
+  --shadow-lg: rgba(0, 0, 0, 0.15) 0px 4px 20px 0px;
+}
+
+/* Silicon AI — Apple-inspired product page */
+body:has(.sai-page) {
+  min-width: 0;
+  background: #fff;
+}
+
+.site-shell-physical-ai {
+  background: #fff;
+  color: #151515;
+}
+
+.site-shell-physical-ai .site-header {
+  position: fixed;
+  z-index: 100;
+  height: 58px;
+  padding: 0 clamp(28px, 4.4vw, 68px);
+  grid-template-columns: 150px 1fr 150px;
+  color: #171717;
+  background: rgba(246, 247, 249, .68);
+  border-bottom: 0;
+  border-bottom: 1px solid rgba(29, 29, 31, .09);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .35);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  transition: background .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+.site-shell-physical-ai .site-header.is-scrolled {
+  height: 58px;
+  color: #151515;
+  background: rgba(246, 247, 249, .78);
+  border-color: rgba(29, 29, 31, .12);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .42), 0 1px 14px rgba(29, 29, 31, .06);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.site-shell-physical-ai .brand {
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: .08em;
+}
+
+.site-shell-physical-ai .desktop-nav {
+  gap: clamp(28px, 3.8vw, 58px);
+}
+
+.site-shell-physical-ai .desktop-nav a,
+.site-shell-physical-ai .team-human {
+  color: var(--color-carbon);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  opacity: .82;
+}
+
+.site-shell-physical-ai .desktop-nav a::after {
+  background: var(--color-carbon);
+}
+
+.site-shell-physical-ai .team-human {
+  min-height: 31px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: var(--color-apple-blue);
+  border-radius: var(--radius-buttons);
+  letter-spacing: .01em;
+  opacity: 1;
+}
+
+.sai-page {
+  --sai-black: var(--color-carbon);
+  --sai-blue: var(--color-apple-blue);
+  --sai-link-blue: var(--color-link-blue);
+  --sai-signal-blue: var(--color-signal-blue);
+  --sai-muted: var(--color-ash);
+  --sai-line: #d2d2d7;
+  --sai-soft: var(--surface-canvas);
+  --sai-ice: var(--surface-elevated-wash);
+  --sai-pebble: var(--surface-pebble);
+  --sai-card-radius: var(--radius-cards);
+  --sai-pill-radius: var(--radius-buttons);
+  color: var(--sai-black);
+  background: var(--sai-soft);
+  font-family: var(--font-sf-pro-text);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  overflow-x: clip;
+}
+
+.sai-page *,
+.sai-page *::before,
+.sai-page *::after {
+  box-sizing: border-box;
+}
+
+.sai-page h1,
+.sai-page h2,
+.sai-page h3,
+.sai-page p {
+  margin: 0;
+}
+
+.sai-page button,
+.sai-page a {
+  font: inherit;
+}
+
+.sai-frame {
+  width: min(1280px, calc(100vw - clamp(48px, 10vw, 144px)));
+  margin: 0 auto;
+}
+
+.sai-hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: #eef0f4;
+}
+
+.sai-hero > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.sai-hero-copy {
+  position: relative;
+  z-index: 1;
+  padding-top: 44px;
+}
+
+.sai-hero-copy h1 {
+  max-width: 680px;
+  font-size: clamp(var(--text-heading-lg), 3.9vw, var(--text-display));
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.sai-hero-copy > p {
+  margin-top: var(--spacing-24);
+  color: var(--color-graphite);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+}
+
+/* Quiet, reversible entrance and exit motion for the physical-AI page. */
+.sai-page .sai-reveal-item {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: opacity .62s cubic-bezier(.22, .61, .36, 1), transform .62s cubic-bezier(.22, .61, .36, 1);
+  transition-delay: var(--sai-reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.sai-page .sai-reveal-item.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.sai-page > .sai-lachat-stage.sai-reveal-item,
+.sai-page > .sai-ness-overview.sai-reveal-item {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sai-page .sai-reveal-item,
+  .sai-page .sai-reveal-item.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.sai-hero-actions {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: var(--element-gap);
+}
+
+.sai-pill,
+.sai-video-button,
+.sai-text-link {
+  border: 0;
+  cursor: pointer;
+}
+
+.sai-pill {
+  min-height: 42px;
+  padding: 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--element-gap);
+  color: var(--color-link-blue);
+  background: rgba(255, 255, 255, .78);
+  border: 1px solid var(--color-link-blue);
+  border-radius: var(--radius-buttons);
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-regular);
+  backdrop-filter: none;
+  transition: background .18s ease;
+}
+
+.sai-pill:hover {
+  background: #fff;
+}
+
+.sai-pill.is-dark {
+  color: #fff;
+  background: var(--color-apple-blue);
+  border-color: var(--color-apple-blue);
+}
+
+.sai-video-button {
+  padding: 8px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #424245;
+  background: transparent;
+  font-size: var(--text-caption);
+}
+
+.sai-video-button svg {
+  width: 30px;
+  height: 30px;
+  padding: 9px;
+  color: var(--color-carbon);
+  background: rgba(255, 255, 255, .8);
+  border-radius: 50%;
+}
+
+.sai-product {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: #f3f2ef;
+}
+
+.sai-product > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sai-product-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.sai-product-copy h2 {
+  font-size: clamp(56px, 5.2vw, 82px);
+  font-weight: 500;
+  line-height: .98;
+  letter-spacing: -.055em;
+}
+
+.sai-product-copy h3 {
+  margin-top: 20px;
+  font-size: clamp(21px, 1.8vw, 28px);
+  font-weight: 400;
+  letter-spacing: -.02em;
+}
+
+.sai-product-copy > p {
+  margin-top: 11px;
+  color: #4d4d50;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.sai-text-link {
+  margin-top: clamp(48px, 7vh, 88px);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #303034;
+  background: transparent;
+  font-size: 12px;
+}
+
+.sai-text-link svg {
+  width: 36px;
+  height: 36px;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, .22);
+  border-radius: 50%;
+  transition: background .18s ease;
+}
+
+.sai-text-link:hover svg {
+  background: #fff;
+}
+
+.sai-feature-band {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(54px, 4.25vw, 66px) 0 clamp(58px, 5vw, 76px);
+  display: flex;
+  align-items: center;
+  background: #fff;
+}
+
+.sai-feature-band h2,
+.sai-feature-embedded h2,
+.sai-section-heading h2 {
+  text-align: center;
+  font-size: clamp(27px, 2.4vw, 38px);
+  font-weight: 600;
+  letter-spacing: -.035em;
+}
+
+.sai-lachat-overview {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(28px, 4vh, 46px) 0;
+  display: flex;
+  align-items: center;
+  background: #fafafa;
+}
+
+.sai-lachat-overview-inner {
+  display: grid;
+  gap: clamp(22px, 3vh, 32px);
+}
+
+.sai-feature-embedded .sai-feature-grid {
+  margin-top: clamp(14px, 2vh, 20px);
+}
+
+.sai-feature-embedded .sai-feature-grid article {
+  min-height: clamp(150px, 19vh, 190px);
+  padding: clamp(18px, 2.4vh, 24px) 14px 16px;
+}
+
+.sai-feature-embedded .sai-feature-grid h3 {
+  margin-top: clamp(12px, 1.8vh, 18px);
+}
+
+.sai-feature-embedded .sai-feature-grid p {
+  margin-top: clamp(7px, 1.2vh, 11px);
+}
+
+.sai-system-embedded .sai-system-grid {
+  margin-top: clamp(14px, 2vh, 20px);
+}
+
+.sai-lachat-overview .sai-system-card,
+.sai-lachat-overview .sai-system-link {
+  height: clamp(235px, 31vh, 300px);
+  min-height: clamp(235px, 31vh, 300px);
+}
+
+.sai-lachat-overview .sai-system-card span {
+  top: 46%;
+}
+
+.sai-lachat-overview .sai-system-card.is-software span {
+  top: 46%;
+}
+
+.sai-feature-grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
+
+.sai-feature-grid article {
+  min-height: 250px;
+  padding: 32px 16px 24px;
+  text-align: center;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #fafafa, #f5f5f7);
+  transition: background .18s ease;
+}
+
+
+.sai-feature-grid article:hover {
+  background: #f2f2f4;
+}
+
+.sai-feature-grid svg {
+  width: 48px;
+  height: 48px;
+  color: #262628;
+}
+
+.sai-feature-grid article:nth-child(-n + 4) svg {
+  width: 26px;
+  height: 26px;
+  padding: 10px;
+  border: 1px solid rgba(38, 38, 40, .56);
+  border-radius: 50%;
+  box-sizing: content-box;
+}
+
+.sai-feature-grid h3 {
+  margin-top: 24px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.sai-feature-grid p {
+  margin-top: 14px;
+  color: #8b8b90;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.sai-system {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(54px, 4.25vw, 66px) 0 clamp(62px, 5.5vw, 84px);
+  display: flex;
+  align-items: center;
+  background: #fafafa;
+}
+
+.sai-section-heading p {
+  margin-top: 10px;
+  color: var(--sai-muted);
+  text-align: center;
+  font-size: 13px;
+}
+
+.sai-system-grid {
+  width: min(1050px, 100%);
+  margin-top: 28px;
+  margin-right: auto;
+  margin-left: auto;
+  display: grid;
+  grid-template-columns: 350px 1fr 390px;
+  align-items: center;
+  gap: 0;
+}
+
+.sai-system-card {
+  position: relative;
+  height: 349px;
+  min-height: 349px;
+  overflow: hidden;
+  border-radius: 26px;
+  background: #111418;
+  color: #fff;
+}
+
+.sai-system-card > img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sai-system-card.is-hardware > img {
+  object-position: center;
+}
+
+.sai-system-card.is-software > img {
+  left: -122%;
+  object-position: center;
+}
+
+.sai-system-card.is-hardware > img,
+.sai-system-card.is-software > img {
+  left: 0;
+  width: 100%;
+  object-position: center;
+}
+
+.sai-system-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(12, 15, 19, .2), rgba(12, 15, 19, .8));
+}
+
+.sai-system-card.is-software::after {
+  background: linear-gradient(90deg, rgba(12, 15, 19, .82), rgba(12, 15, 19, .25));
+}
+
+.sai-system-copy {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  padding: clamp(22px, 2.4vw, 30px);
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.sai-system-card h3 {
+  font-size: clamp(var(--text-subheading), 2.2vw, var(--text-heading-sm));
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-heading-sm);
+  letter-spacing: var(--tracking-heading-sm);
+}
+
+.sai-system-card p {
+  margin-top: var(--spacing-4);
+  color: rgba(255, 255, 255, .74);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+  letter-spacing: var(--tracking-body-sm);
+}
+
+.sai-system-card ul {
+  align-self: center;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--spacing-4);
+  list-style: none;
+  color: rgba(255, 255, 255, .7);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+  letter-spacing: var(--tracking-body-sm);
+}
+
+.sai-system-card.is-software .sai-system-copy {
+  justify-items: end;
+  text-align: right;
+}
+
+.sai-system-card.is-software ul {
+  justify-items: end;
+}
+
+.sai-system-link {
+  position: relative;
+  height: 349px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.sai-system-link::before {
+  content: "";
+  position: absolute;
+  inset: 18% 8%;
+  background: radial-gradient(circle at center, rgba(41, 151, 255, .085), rgba(41, 151, 255, 0) 64%);
+  pointer-events: none;
+}
+
+.sai-signal-flow {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sai-signal-flow path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+}
+
+.sai-signal-flow .is-left {
+  stroke: url(#sai-signal-left);
+}
+
+.sai-signal-flow .is-right {
+  stroke: url(#sai-signal-right);
+}
+
+.sai-signal-flow .is-outer {
+  stroke-width: .7;
+  opacity: .56;
+}
+
+.sai-signal-flow .is-inner {
+  stroke-width: 1;
+  opacity: .84;
+}
+
+.sai-signal-halo {
+  fill: url(#sai-signal-core);
+  opacity: .22;
+}
+
+.sai-signal-bridge {
+  stroke: var(--sai-signal-blue);
+  stroke-width: 1;
+  opacity: .52;
+}
+
+.sai-signal-node {
+  fill: var(--sai-signal-blue);
+  opacity: .9;
+}
+
+.sai-signal-label {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: calc(50% + 44px);
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  color: var(--color-graphite);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.sai-signal-label strong {
+  font-size: var(--text-body-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-body-sm);
+  letter-spacing: var(--tracking-body-sm);
+}
+
+.sai-signal-label small {
+  color: var(--sai-muted);
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-caption);
+  letter-spacing: var(--tracking-caption);
+}
+
+.sai-ness {
+  background: #e7eaee;
+}
+
+.sai-lachat-stage {
+  position: relative;
+  height: 160vh;
+  margin: 0;
+}
+
+.sai-lachat-reveal-image {
+  opacity: 0;
+  object-position: center center;
+}
+
+.sai-ness-overview {
+  background: #fff;
+}
+
+.sai-ness-stage {
+  position: relative;
+  height: 150vh;
+  margin: 0;
+}
+
+.sai-ness > img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transform: none;
+}
+
+.sai-ness > img.sai-ness-reveal-image {
+  opacity: 0;
+  object-position: center center;
+}
+
+.sai-ness .sai-product-copy h2 {
+  font-size: 60px;
+}
+
+.sai-ness-reveal-copy {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .42);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sai-ness-reveal-copy .sai-ness-reveal-kicker {
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, .82);
+  font-size: 12px;
+  letter-spacing: .16em;
+}
+
+.sai-ness-reveal-copy h2 {
+  font-size: clamp(34px, 4.2vw, 64px);
+  line-height: 1.12;
+  letter-spacing: -.035em;
+}
+
+.sai-ness-reveal-copy > p:last-child {
+  margin-top: 22px;
+  color: rgba(255, 255, 255, .9);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+@media (min-width: 761px) {
+  .sai-lachat-stage {
+    height: 160vh;
+  }
+
+  .sai-lachat-stage > .sai-lachat {
+    position: sticky;
+    top: 0;
+    height: calc(55vh + (45vh * var(--lachat-reveal, 0)));
+    min-height: 0;
+    overflow: hidden;
+    z-index: 1;
+    border-radius: calc(28px * (1 - var(--lachat-reveal, 0)));
+    transition: height .52s cubic-bezier(.22, .61, .36, 1), border-radius .52s cubic-bezier(.22, .61, .36, 1);
+    will-change: height, border-radius;
+  }
+
+  .sai-lachat-stage > .sai-lachat > img {
+    height: 100%;
+  }
+
+  .sai-lachat-stage > .sai-lachat > img.sai-lachat-reveal-image {
+    opacity: clamp(0, calc((var(--lachat-reveal, 0) - .2) * 1.55), 1);
+    will-change: opacity;
+    transition: opacity .46s cubic-bezier(.22, .61, .36, 1);
+  }
+
+  .sai-ness-overview {
+    display: block;
+    overflow: visible;
+  }
+
+  .sai-ness-stage {
+    height: 160vh;
+  }
+
+  .sai-ness-overview .sai-product {
+    position: sticky;
+    top: 0;
+    height: calc(55vh + (45vh * var(--ness-reveal, 0)));
+    min-height: 0;
+    overflow: hidden;
+    z-index: 1;
+    border-radius: calc(28px * (1 - var(--ness-reveal, 0)));
+    transition: height .52s cubic-bezier(.22, .61, .36, 1), border-radius .52s cubic-bezier(.22, .61, .36, 1);
+    will-change: height, border-radius;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .sai-ness .sai-product-copy {
+    opacity: calc(1 - (var(--ness-reveal, 0) * 1.35));
+    transition: opacity .46s cubic-bezier(.22, .61, .36, 1);
+  }
+
+  .sai-ness > img.sai-ness-reveal-image {
+    opacity: clamp(0, calc((var(--ness-reveal, 0) - .2) * 1.55), 1);
+    will-change: opacity;
+    backface-visibility: hidden;
+    transition: opacity .46s cubic-bezier(.22, .61, .36, 1);
+  }
+
+  .sai-ness-reveal-copy {
+    opacity: min(1, calc(var(--ness-reveal, 0) * 1.45));
+    transition: opacity .46s cubic-bezier(.22, .61, .36, 1);
+  }
+
+  .sai-ness-overview > .sai-frame {
+    min-height: 45vh;
+    padding-top: var(--spacing-48);
+    padding-bottom: var(--spacing-56);
+    display: flex;
+    align-items: center;
+  }
+
+  .sai-ness-overview .sai-feature-embedded {
+    width: 100%;
+  }
+
+  .sai-ness-overview .sai-feature-grid {
+    margin-top: 24px;
+  }
+}
+
+.sai-technology {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(54px, 4.25vw, 66px) 0 clamp(58px, 5vw, 76px);
+  display: flex;
+  align-items: center;
+  background: #fafafa;
+}
+
+.sai-tech-grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+
+.sai-tech-grid article {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f0f1f3;
+}
+
+.sai-tech-grid img {
+  width: 100%;
+  aspect-ratio: 1.45 / 1;
+  display: block;
+  object-fit: cover;
+}
+
+/* The portrait source is taller than the technology card; keep the face in frame. */
+.sai-tech-grid article:nth-child(4) img {
+  object-position: center 12%;
+}
+
+.sai-tech-grid article > div {
+  padding: 18px 18px 21px;
+}
+
+.sai-tech-grid h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sai-tech-grid p {
+  margin-top: 7px;
+  color: #77777c;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.sai-progress {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  background: #122031;
+}
+
+.sai-progress > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sai-progress-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.sai-progress-copy h2 {
+  font-size: clamp(38px, 4vw, 60px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -.045em;
+}
+
+.sai-progress-copy > p {
+  margin-top: 17px;
+  color: rgba(255, 255, 255, .8);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.sai-progress-copy .sai-pill {
+  margin-top: 24px;
+}
+
+.sai-footer {
+  color: rgba(255, 255, 255, .6);
+  background: #151719;
+}
+
+.sai-footer-grid {
+  padding: 38px 0 30px;
+  display: grid;
+  grid-template-columns: 1.6fr repeat(4, .8fr) 1.1fr;
+  gap: 28px;
+}
+
+.sai-footer-grid > div {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+}
+
+.sai-footer-brand strong {
+  color: #fff;
+  font-size: 20px;
+  letter-spacing: .08em;
+}
+
+.sai-footer-brand p {
+  font-size: 10px;
+}
+
+.sai-footer-grid b {
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.sai-footer-grid a {
+  color: rgba(255, 255, 255, .56);
+  font-size: 10px;
+}
+
+.sai-footer-grid a:hover {
+  color: #fff;
+}
+
+.sai-footer-progress {
+  align-self: start;
+  min-height: 34px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .24);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.sai-footer-bottom {
+  padding: 15px 0 18px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  font-size: 9px;
+}
+
+.sai-modal {
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(0, 0, 0, .78);
+  backdrop-filter: none;
+}
+
+.sai-modal > img {
+  width: min(920px, calc(100vw - 48px));
+  max-height: 72vh;
+  object-fit: cover;
+  border-radius: 26px;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, .5);
+}
+
+.sai-modal > div {
+  position: absolute;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.sai-modal > div svg {
+  width: 64px;
+  height: 64px;
+  padding: 21px;
+  background: rgba(255, 255, 255, .18);
+  border-radius: 50%;
+}
+
+.sai-modal > div strong {
+  margin-top: 8px;
+  font-size: 20px;
+}
+
+.sai-modal > div p {
+  color: rgba(255, 255, 255, .72);
+  font-size: 12px;
+}
+
+.sai-modal-close {
+  position: fixed;
+  z-index: 2;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .14);
+  cursor: pointer;
+}
+
+.sai-page button:focus-visible,
+.sai-page a:focus-visible {
+  outline: 3px solid var(--color-apple-blue);
+  outline-offset: 3px;
+}
+
+/* DESIGN (2).md — Apple system constraints */
+.site-shell-physical-ai .desktop-nav a,
+.site-shell-physical-ai .team-human {
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-caption);
+}
+
+.site-shell-physical-ai .team-human {
+  min-height: var(--spacing-40);
+  padding: 0 15px;
+  background: var(--color-apple-blue);
+  border-radius: var(--radius-buttons);
+}
+
+.sai-page h1,
+.sai-page h2,
+.sai-page .sai-progress-copy h2 {
+  font-family: var(--font-sf-pro-display);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.sai-hero-copy h1 {
+  font-size: clamp(var(--text-heading-lg), 3.9vw, var(--text-display));
+}
+
+.sai-hero-copy > p,
+.sai-product-copy > p {
+  color: var(--color-graphite);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+}
+
+.sai-product-copy h2 {
+  font-size: clamp(var(--text-heading-lg), 3.9vw, var(--text-display));
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.sai-product-copy h3 {
+  font-size: clamp(var(--text-subheading), 1.8vw, var(--text-heading-sm));
+  font-weight: var(--font-weight-light);
+  line-height: var(--leading-subheading);
+  letter-spacing: var(--tracking-subheading);
+}
+
+.sai-feature-band h2,
+.sai-feature-embedded h2,
+.sai-section-heading h2 {
+  font-size: clamp(var(--text-heading-sm), 2.8vw, var(--text-heading));
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+
+.sai-pill {
+  min-height: 44px;
+  padding: 11px 15px;
+  color: var(--color-link-blue);
+  background: transparent;
+  border: 1px solid var(--color-link-blue);
+  border-radius: var(--sai-pill-radius);
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.18;
+  letter-spacing: var(--tracking-body);
+}
+
+.sai-pill:hover {
+  color: #fff;
+  background: var(--color-link-blue);
+}
+
+.sai-pill.is-dark,
+.sai-progress-copy .sai-pill {
+  color: var(--sai-ice);
+  background: var(--sai-blue);
+  border-color: var(--sai-blue);
+}
+
+.sai-pill.is-dark:hover,
+.sai-progress-copy .sai-pill:hover {
+  background: var(--color-apple-blue);
+  border-color: var(--color-apple-blue);
+  opacity: .9;
+}
+
+.sai-video-button,
+.sai-text-link {
+  color: var(--sai-link-blue);
+  font-weight: var(--font-weight-regular);
+}
+
+.sai-text-link {
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+  letter-spacing: var(--tracking-body-sm);
+}
+
+.sai-text-link svg {
+  border-color: var(--sai-link-blue);
+}
+
+.sai-text-link:hover {
+  text-decoration: none;
+}
+
+/* Unified physical-AI CTA standard */
+.sai-page :is(.sai-pill, .sai-video-button, .sai-text-link, .sai-footer-progress) {
+  min-width: 132px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--sai-link-blue);
+  background: transparent;
+  border: 1px solid var(--sai-link-blue);
+  border-radius: var(--radius-buttons);
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-regular);
+  line-height: 1;
+  letter-spacing: var(--tracking-body);
+  cursor: pointer;
+  transition: color .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+}
+
+.sai-page :is(.sai-pill, .sai-video-button, .sai-text-link):hover {
+  color: #fff;
+  background: var(--sai-link-blue);
+  border-color: var(--sai-link-blue);
+}
+
+.sai-page :is(.sai-pill.is-dark, .sai-progress-copy .sai-pill) {
+  color: #fff;
+  background: var(--sai-blue);
+  border-color: var(--sai-blue);
+}
+
+.sai-page :is(.sai-pill.is-dark, .sai-progress-copy .sai-pill):hover {
+  color: #fff;
+  background: var(--color-apple-blue);
+  border-color: var(--color-apple-blue);
+  opacity: .9;
+}
+
+.sai-page .sai-video-button svg {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  color: currentColor;
+  background: transparent;
+  border-radius: 0;
+}
+
+.sai-page .sai-footer-progress {
+  width: max-content;
+  justify-self: start;
+  color: #fff;
+  border-color: rgba(255, 255, 255, .48);
+}
+
+.sai-page .sai-footer-progress:hover {
+  color: var(--sai-black);
+  background: #fff;
+  border-color: #fff;
+}
+
+.sai-lachat-overview,
+.sai-technology {
+  background: #fff;
+}
+
+.sai-feature-grid {
+  gap: var(--element-gap);
+}
+
+.sai-feature-grid article {
+  padding: var(--card-padding);
+  border-radius: var(--sai-card-radius);
+  background: var(--sai-soft);
+}
+
+.sai-feature-embedded .sai-feature-grid article {
+  padding: var(--card-padding);
+}
+
+.sai-feature-grid article:hover {
+  background: var(--sai-pebble);
+}
+
+.sai-feature-grid h3 {
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-subheading);
+  letter-spacing: var(--tracking-body);
+}
+
+.sai-feature-grid p,
+.sai-section-heading p {
+  color: var(--sai-muted);
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+  letter-spacing: var(--tracking-caption);
+}
+
+.sai-system-card,
+.sai-tech-grid article,
+.sai-modal > img {
+  border-radius: var(--sai-card-radius);
+  box-shadow: none;
+}
+
+.sai-system-card h3 {
+  font-size: var(--text-heading-sm);
+  line-height: var(--leading-heading-sm);
+  letter-spacing: var(--tracking-heading-sm);
+}
+
+.sai-system-card p,
+.sai-system-card span {
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+  letter-spacing: var(--tracking-body-sm);
+}
+
+.sai-tech-grid {
+  gap: var(--element-gap);
+}
+
+.sai-tech-grid article {
+  background: var(--sai-soft);
+}
+
+.sai-tech-grid article > div {
+  padding: var(--card-padding);
+}
+
+.sai-tech-grid h3 {
+  font-size: var(--text-body);
+  line-height: var(--leading-subheading);
+  letter-spacing: var(--tracking-body);
+}
+
+.sai-tech-grid p {
+  color: var(--sai-muted);
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+  letter-spacing: var(--tracking-caption);
+}
+
+.sai-progress-copy h2 {
+  font-size: clamp(var(--text-heading), 3.9vw, var(--text-display));
+}
+
+.sai-progress-copy > p {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+}
+
+.sai-footer {
+  color: var(--color-frost);
+  background: var(--color-carbon);
+}
+
+.sai-footer-brand p,
+.sai-footer-grid b,
+.sai-footer-grid a,
+.sai-footer-progress,
+.sai-footer-bottom {
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+  letter-spacing: var(--tracking-caption);
+}
+
+.sai-footer-grid a {
+  color: var(--color-ash);
+}
+
+.sai-footer-progress {
+  min-height: var(--spacing-40);
+  color: var(--color-link-blue);
+  border-color: var(--color-link-blue);
+  border-radius: var(--sai-pill-radius);
+}
+
+.sai-footer-bottom {
+  border-color: var(--color-smoke);
+}
+
+/* Reference-calibrated LaChat overview composition */
+.sai-lachat-overview {
+  padding: 50px 0 80px;
+  align-items: flex-start;
+}
+
+.sai-lachat-overview-inner {
+  gap: 36px;
+}
+
+.sai-feature-embedded h2,
+.sai-system-embedded .sai-section-heading h2 {
+  font-size: var(--text-heading-sm);
+  line-height: var(--leading-heading-sm);
+  letter-spacing: var(--tracking-heading-sm);
+}
+
+.sai-feature-embedded .sai-feature-grid {
+  margin-top: 14px;
+}
+
+.sai-feature-embedded .sai-feature-grid article {
+  height: 212px;
+  min-height: 212px;
+}
+
+.sai-system-embedded {
+  padding-top: 30px;
+  border-top: 1px solid rgba(29, 29, 31, .06);
+}
+
+.sai-system-embedded .sai-system-grid {
+  width: min(1050px, calc(100% - 128px));
+  aspect-ratio: 3 / 1;
+  margin-top: 18px;
+  grid-template-columns: 33.333% minmax(0, 1fr) 37.143%;
+}
+
+.sai-lachat-overview .sai-system-card,
+.sai-lachat-overview .sai-system-link {
+  height: 100%;
+  min-height: 0;
+}
+
+@media (max-width: 1050px) {
+  .sai-frame {
+    width: min(100% - 48px, 920px);
+  }
+
+  .sai-hero > img {
+    object-position: 58% center;
+  }
+
+  .sai-feature-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sai-system-grid {
+    grid-template-columns: 1fr 120px 1fr;
+  }
+
+  .sai-tech-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sai-footer-grid {
+    grid-template-columns: 1.4fr repeat(4, .8fr);
+  }
+
+  .sai-footer-progress {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .site-shell-physical-ai .site-header {
+    grid-template-columns: 1fr auto;
+    padding: 0 18px;
+  }
+
+  .site-shell-physical-ai .desktop-nav {
+    display: none;
+  }
+
+  .site-shell-physical-ai .team-human {
+    font-size: var(--text-caption);
+  }
+
+  .sai-frame {
+    width: calc(100% - 32px);
+  }
+
+  .sai-hero {
+    height: 100vh;
+    height: 100svh;
+    min-height: 720px;
+    align-items: flex-start;
+  }
+
+  .sai-hero > img {
+    object-position: 57% bottom;
+  }
+
+  .sai-hero-copy {
+    padding-top: 112px;
+  }
+
+  .sai-hero-copy h1 {
+    max-width: 350px;
+    font-size: 45px;
+  }
+
+  .sai-hero-copy > p {
+    margin-top: 18px;
+    font-size: var(--text-body-sm);
+  }
+
+  .sai-hero-actions {
+    flex-wrap: wrap;
+  }
+
+  .sai-product {
+    height: 100vh;
+    height: 100svh;
+    min-height: 720px;
+    align-items: flex-start;
+  }
+
+  .sai-product > img {
+    object-position: 58% bottom;
+  }
+
+  .sai-product-copy {
+    padding-top: 64px;
+  }
+
+  .sai-product-copy h2 {
+    font-size: var(--text-display);
+  }
+
+  .sai-lachat-overview {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 52px 0 62px;
+    align-items: start;
+  }
+
+  .sai-lachat-overview-inner {
+    gap: 48px;
+  }
+
+  .sai-feature-embedded .sai-feature-grid article {
+    height: auto;
+    min-height: 172px;
+  }
+
+  .sai-feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sai-feature-grid article {
+    min-height: 172px;
+    padding: var(--card-padding);
+  }
+
+  .sai-feature-grid svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .sai-feature-grid article:nth-child(-n + 4) svg {
+    width: 22px;
+    height: 22px;
+    padding: 7px;
+  }
+
+  .sai-feature-grid h3 {
+    margin-top: 15px;
+    font-size: var(--text-body);
+  }
+
+  .sai-feature-grid p {
+    margin-top: 9px;
+  }
+
+  .sai-system-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .sai-system-embedded .sai-system-grid {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .sai-system-card {
+    height: 245px;
+    min-height: 245px;
+  }
+
+  .sai-lachat-overview .sai-system-card {
+    height: 245px;
+    min-height: 245px;
+  }
+
+  .sai-system-link {
+    height: 42px;
+  }
+
+  .sai-lachat-overview .sai-system-link {
+    height: 42px;
+    min-height: 42px;
+  }
+
+  .sai-system-link img {
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .sai-tech-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sai-progress {
+    height: 100vh;
+    height: 100svh;
+    min-height: 720px;
+    align-items: flex-start;
+  }
+
+  .sai-progress > img {
+    object-position: 60% bottom;
+  }
+
+  .sai-progress-copy {
+    padding-top: 58px;
+  }
+
+  .sai-footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sai-footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 460px) {
+  .sai-hero-copy h1 {
+    font-size: var(--text-heading);
+  }
+
+  .sai-hero-actions {
+    gap: 8px;
+  }
+
+  .sai-pill {
+    padding: 0 15px;
+    font-size: var(--text-body-sm);
+  }
+
+  .sai-video-button {
+    width: 100%;
+  }
+
+  .sai-tech-grid {
+    gap: 8px;
+  }
+
+  .sai-tech-grid article > div {
+    padding: var(--card-padding);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sai-page *,
+  .sai-page *::before,
+  .sai-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
 }
 
 * { box-sizing: border-box; }

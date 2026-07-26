@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import useSiteMotion from './useSiteMotion.js'
 import CentralGate from './pages/CentralGate.jsx'
 import Home from './pages/Home.jsx'
+import PhysicalAI from './pages/PhysicalAI.jsx'
 import Wallet from './pages/Wallet.jsx'
 import {
   FullPageRail,
@@ -13,6 +14,7 @@ import {
 
 function getPageFromHash() {
   if (window.location.hash.startsWith('#/central-gate')) return 'central-gate'
+  if (window.location.hash.startsWith('#/physical-ai')) return 'physical-ai'
   if (window.location.hash.startsWith('#/wallet')) return 'wallet'
   return 'home'
 }
@@ -45,6 +47,7 @@ export default function App() {
   }, [])
 
   const isCentralGate = page === 'central-gate'
+  const isPhysicalAI = page === 'physical-ai'
   const isWallet = page === 'wallet'
   const railLinks = isCentralGate ? centralGatePanelLinks : isWallet ? walletPanelLinks : panelLinks
   const initialPanel = isCentralGate ? 'cg-definition' : isWallet ? 'wallet-overview' : 'central-gate'
@@ -53,11 +56,8 @@ export default function App() {
     <div className={`site-shell site-shell-${page}`} ref={appRef}>
       {page === 'home' && <OpeningSequence />}
       <Header page={page} />
-      <FullPageRail
-        links={railLinks}
-        initialPanel={initialPanel}
-      />
-      {isCentralGate ? <CentralGate /> : isWallet ? <Wallet /> : <Home />}
+      {!isPhysicalAI && <FullPageRail links={railLinks} initialPanel={initialPanel} />}
+      {isCentralGate ? <CentralGate /> : isPhysicalAI ? <PhysicalAI /> : isWallet ? <Wallet /> : <Home />}
     </div>
   )
 }

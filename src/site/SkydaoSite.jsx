@@ -3,7 +3,7 @@ import CountUp from '../CountUp.jsx'
 
 export const homeNavItems = [
   ['Central Gate', '#/central-gate/definition'],
-  ['硅基智造', '#physical-ai'],
+  ['硅基智造', '#/physical-ai'],
   ['SkyDAO Wallet', '#/wallet'],
   ['SkyDAO Art', '#art'],
   ['Web3 Finance', '#/wallet'],
@@ -145,6 +145,8 @@ const walletCards = [
 
 export function Header({ page = 'home' }) {
   const [scrolled, setScrolled] = useState(false)
+  const isPhysicalAI = page === 'physical-ai'
+  // Secondary pages use the same global navigation content as the homepage.
   const navItems = homeNavItems
 
   useEffect(() => {
@@ -156,7 +158,7 @@ export function Header({ page = 'home' }) {
 
   return (
     <header className={`site-header site-header-${page} ${scrolled ? 'is-scrolled' : ''}`}>
-      <a className="brand" href="#central-gate" aria-label="SkyDAO 首页">
+      <a className="brand" href={isPhysicalAI ? '#/physical-ai' : '#central-gate'} aria-label={isPhysicalAI ? '硅基智造首页' : 'SkyDAO 首页'}>
         <span>SKYDAO</span>
       </a>
       <nav className="desktop-nav" aria-label="主导航">
@@ -164,7 +166,7 @@ export function Header({ page = 'home' }) {
           <a key={label} href={href} data-scroll-target={target}>{label}</a>
         ))}
       </nav>
-      <a className="team-human" href="#about">TEAM HUMAN</a>
+      {!isPhysicalAI && <a className="team-human" href="#about">TEAM HUMAN</a>}
     </header>
   )
 }
@@ -580,7 +582,7 @@ export function FeatureSection({ item }) {
         <h2>{item.title}</h2>
         {item.subtitle && <h3>{item.subtitle}</h3>}
         <p className="feature-copy">{item.copy}</p>
-        <ArrowButton>{item.button}</ArrowButton>
+        <ArrowButton href="#/physical-ai">{item.button}</ArrowButton>
       </Reveal>
     </section>
   )

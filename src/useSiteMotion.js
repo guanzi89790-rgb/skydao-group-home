@@ -11,6 +11,18 @@ export default function useSiteMotion(scope, motionKey = 'home') {
     if (!root) return undefined
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (motionKey === 'physical-ai') {
+      const previousOverflow = document.body.style.overflow
+      document.body.style.overflow = ''
+      document.documentElement.classList.remove('fullpage-ready', 'fullpage-controlled')
+      window.scrollTo({ top: 0, behavior: 'auto' })
+
+      return () => {
+        document.body.style.overflow = previousOverflow
+        document.documentElement.classList.remove('fullpage-ready', 'fullpage-controlled')
+      }
+    }
+
     const usesCustomScroll = !prefersReducedMotion
     const previousOverflow = document.body.style.overflow
     const panels = [...root.querySelectorAll('.fullpage-panel')]
@@ -169,7 +181,7 @@ export default function useSiteMotion(scope, motionKey = 'home') {
 
     const context = gsap.context(() => {
       if (prefersReducedMotion) {
-        gsap.set('.opening-sequence', { display: 'none' })
+        if (root.querySelector('.opening-sequence')) gsap.set('.opening-sequence', { display: 'none' })
         gsap.set(motionKey === 'home' ? '.hero-title-inner, .hero-intro-item, .site-header' : '.site-header', { clearProps: 'all' })
         document.documentElement.classList.add('fullpage-ready')
         settleInitialPanel()
@@ -192,7 +204,9 @@ export default function useSiteMotion(scope, motionKey = 'home') {
       }
 
       if (skipOpening) {
-        gsap.set('.opening-sequence', { display: 'none', autoAlpha: 0, pointerEvents: 'none' })
+        if (root.querySelector('.opening-sequence')) {
+          gsap.set('.opening-sequence', { display: 'none', autoAlpha: 0, pointerEvents: 'none' })
+        }
         gsap.set('.site-header', { clearProps: 'all' })
         finishOpening()
       } else {
