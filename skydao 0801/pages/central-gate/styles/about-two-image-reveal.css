@@ -1,0 +1,61 @@
+/* Page-local copy of About's two-image, scroll-driven hero reveal. */
+.central-hero-reveal-stage {
+  --central-hero-reveal: 0;
+  height: 175svh;
+  position: relative;
+}
+
+.site-shell-central-gate .central-page .central-hero-reveal-stage > section.central-starship-hero.fullpage-panel {
+  position: sticky !important;
+  top: 0;
+  height: 100svh !important;
+  min-height: 620px !important;
+  max-height: none !important;
+  overflow: hidden;
+}
+
+.central-hero-reveal-stage .central-detail-bg {
+  inset: -5% !important;
+  width: 110% !important;
+  height: 110% !important;
+}
+
+.central-hero-reveal-stage .central-detail-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.central-hero-reveal-primary {
+  transform: scale(calc(1 + var(--central-hero-reveal) * .08));
+  transform-origin: center;
+  will-change: transform;
+}
+
+.central-hero-reveal-secondary {
+  z-index: 1;
+  clip-path: inset(calc((1 - var(--central-hero-reveal)) * 100%) 0 0 0);
+  transform: scale(calc(1.08 - var(--central-hero-reveal) * .08));
+  transform-origin: center;
+  will-change: clip-path, transform;
+}
+
+.central-hero-reveal-stage .central-detail-shade {
+  z-index: 2;
+}
+
+.central-hero-reveal-stage .central-starship-copy,
+.central-hero-reveal-stage .central-panel-index {
+  z-index: 3;
+}
+
+@media (max-width: 900px) {
+  .central-hero-reveal-stage { height: 155svh; min-height: 1040px; }
+  .central-hero-reveal-secondary img { object-position: 58% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .central-hero-reveal-stage { height: 100svh; min-height: 670px; }
+  .central-hero-reveal-secondary { display: none; }
+  .central-hero-reveal-primary { transform: none; }
+}

@@ -1,0 +1,282 @@
+/* About motion language, copied locally for the home page. */
+.cinematic-home .about-motion-image {
+  will-change: transform, clip-path, opacity;
+}
+
+.cinematic-home .about-motion-copy > * {
+  will-change: transform, opacity;
+}
+
+.cinematic-home .cinematic-hero .cinematic-media-shade {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-home .about-motion-image {
+    clip-path: none !important;
+    transform: none !important;
+  }
+
+  .cinematic-home .about-motion-copy > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+/* Physical AI uses the approved About ecosystem module as its exact motion
+   and framing reference. This remains local to the Home page. */
+  @media (min-width: 901px) {
+    .cinematic-hero {
+      height: 100svh !important;
+      min-height: 720px !important;
+      overflow: hidden !important;
+      background: #030609;
+    }
+
+    .cinematic-hero-stage {
+      position: relative;
+      height: 100svh;
+      min-height: 720px;
+    }
+
+    .cinematic-hero-media {
+      inset: -5%;
+      width: 110%;
+      height: 110%;
+      clip-path: none !important;
+    }
+
+    .cinematic-hero .cinematic-media-shade {
+      background:
+        linear-gradient(90deg, rgba(2, 5, 8, .88) 0%, rgba(2, 5, 8, .28) 47%, rgba(2, 5, 8, .12)),
+        linear-gradient(0deg, rgba(2, 5, 8, .55), transparent 45%);
+    }
+
+    .cinematic-hero > .cinematic-hero-stage > .cinematic-chapter-mark {
+      top: 112px;
+      left: 3.4vw;
+      gap: 15px;
+      font-size: 10px;
+      letter-spacing: .14em;
+    }
+
+    .cinematic-hero .cinematic-chapter-mark span {
+      font-size: 24px;
+      font-weight: 300;
+      letter-spacing: -.04em;
+    }
+
+    .cinematic-hero-copy {
+      left: 12.7vw;
+      top: 37vh;
+      bottom: auto;
+    }
+
+    .cinematic-hero h1 {
+      font-size: clamp(58px, 7.2vw, 116px);
+      line-height: .92;
+      letter-spacing: -.065em;
+    }
+
+    .cinematic-hero-copy > h2 {
+      margin-top: 5vh;
+      font-size: clamp(12px, 1vw, 15px);
+      line-height: 1.65;
+      letter-spacing: .12em;
+    }
+
+    .cinematic-hero-copy > p {
+      max-width: 560px;
+      margin: 18px 0 0;
+      color: #c6cdd2;
+      font-size: clamp(12px, 1vw, 15px);
+      line-height: 1.65;
+    }
+
+    .cinematic-hero-copy .cinematic-link {
+      margin-top: 4vh;
+    }
+
+    .cinematic-opening-line {
+      position: absolute;
+      z-index: 3;
+      right: 3.4vw;
+      bottom: 77px;
+      left: 3.4vw;
+      height: 1px;
+      background: rgba(255, 255, 255, .35);
+      transform-origin: left;
+    }
+
+    .cinematic-scroll-cue {
+      right: 3.4vw;
+      bottom: 33px;
+      gap: 14px;
+      color: #fff;
+      font-size: 9px;
+      letter-spacing: .16em;
+    }
+
+    .cinematic-scroll-cue i {
+      width: 16px;
+      height: 16px;
+      border-right: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      background: none;
+      transform: rotate(45deg) scale(.55);
+    }
+
+    .cinematic-scroll-cue i::after {
+      display: none;
+    }
+
+    .hero-scene-caption {
+      display: none;
+    }
+
+    .cinematic-aies {
+      height: 125svh !important;
+      min-height: 840px !important;
+      background: #030609;
+    }
+
+    .cinematic-aies .aies-media {
+      inset: 8vh 5vw 0;
+      width: 90vw;
+      height: 105vh;
+    }
+
+    .cinematic-aies .aies-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(.62) contrast(1.08) brightness(.76);
+      will-change: transform, clip-path;
+    }
+
+    .cinematic-aies .cinematic-media-shade {
+      background:
+        linear-gradient(90deg, #030609 0%, transparent 34%, transparent 78%, #030609 100%),
+        linear-gradient(0deg, #030609 0%, transparent 35%, rgba(3, 6, 9, .75) 100%);
+    }
+
+    .cinematic-aies > .cinematic-chapter-mark {
+      top: 112px;
+      left: 3.4vw;
+    }
+
+    .cinematic-aies .aies-story-copy {
+      left: 12.7vw;
+      top: 35vh;
+      bottom: auto;
+    }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-stage {
+    height: 100vh;
+    min-height: 720px;
+    background: #050708;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-intro {
+    width: 68vw;
+    min-width: 850px;
+    height: 100vh;
+    padding: 35vh 8vw 0 12.7vw;
+    justify-content: flex-start;
+    border-left: 0;
+    background: #07090a;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-intro .cinematic-chapter-mark {
+    top: 112px;
+    left: 3.4vw;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-intro h2 {
+    max-width: 8em;
+    font-size: clamp(58px, 7vw, 104px);
+    line-height: .93;
+    letter-spacing: -.06em;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-intro p {
+    margin-top: 30px;
+    color: #8f999f;
+    font-size: 12px;
+    letter-spacing: 0;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-intro > .cinematic-link {
+    left: 12.7vw;
+    bottom: 8vh;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-panel {
+    width: 65vw;
+    min-width: 840px;
+    height: 100vh;
+    border-left: 1px solid rgba(255, 255, 255, .25);
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-panel > img {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(.55) contrast(1.07) brightness(.82);
+    clip-path: none !important;
+    transform: none;
+    transition: transform 1.2s cubic-bezier(.2, .7, .2, 1);
+  }
+
+    .cinematic-ai .cinematic-gallery-panel-ai > img {
+    filter: saturate(.92) contrast(1.04) brightness(.94);
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-panel:hover > img {
+    transform: scale(1.035);
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-panel .cinematic-media-shade {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, rgba(2, 4, 6, .85), transparent 55%);
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-meta {
+    top: 110px;
+    left: 3vw;
+    right: auto;
+    padding: 0;
+    border: 0;
+    color: #f3f6f8;
+    font: 300 13px "Manrope", sans-serif;
+    letter-spacing: .18em;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-meta span:last-child {
+    display: none;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-copy {
+    left: 3vw;
+    bottom: 8vh;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-copy h3 {
+    font-size: clamp(45px, 5vw, 76px);
+    line-height: 1;
+    letter-spacing: -.05em;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-copy p {
+    margin-top: 18px;
+    color: #bdc4c9;
+    font-size: 12px;
+  }
+
+    :is(.cinematic-ai, .cinematic-art) .cinematic-gallery-progress {
+    display: none;
+  }
+}

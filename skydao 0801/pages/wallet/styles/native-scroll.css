@@ -1,0 +1,73 @@
+/* One motion language across every page, matching the approved Physical AI
+   reference: 18px travel, 620ms, and the same enter/leave easing. */
+.site-unified-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 620ms cubic-bezier(.22, .61, .36, 1),
+    transform 620ms cubic-bezier(.22, .61, .36, 1);
+  transition-delay: var(--site-reveal-delay, 0ms);
+  will-change: auto;
+}
+
+.site-unified-reveal.is-visible {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-unified-reveal,
+  .site-unified-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* One shared phone stays geometrically stable across Wallet and Wealth.
+   Only its surrounding content crossfades when the centered panel changes. */
+.site-shell-wallet .wallet-persistent-phone {
+  top: calc(50% + 32px) !important;
+  transform: translateY(-50%) scale(1) !important;
+  transition: opacity 240ms ease !important;
+  backface-visibility: hidden;
+  isolation: isolate;
+  will-change: opacity;
+}
+
+.site-shell-wallet .wallet-persistent-phone .wallet-app-complete {
+  filter: none !important;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.site-shell-wallet .wallet-persistent-phone .wallet-phone-bubbles,
+.site-shell-wallet .wallet-persistent-phone .wallet-phone-token-cloud {
+  transition: opacity 180ms ease, visibility 180ms ease !important;
+}
+
+.site-shell-wallet .wallet-persistent-phone .wallet-phone-bubbles span,
+.site-shell-wallet .wallet-persistent-phone .wallet-phone-token-cloud img {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+.site-shell-wallet[data-visual-panel="wallet-wallet"] .wallet-persistent-phone,
+.site-shell-wallet[data-visual-panel="wallet-wealth"] .wallet-persistent-phone {
+  opacity: 1;
+  visibility: visible;
+}
+
+.site-shell-wallet[data-visual-panel="wallet-wallet"] .wallet-phone-bubbles,
+.site-shell-wallet[data-visual-panel="wallet-wealth"] .wallet-phone-token-cloud {
+  opacity: 1;
+  visibility: visible;
+}
+
+.site-shell-wallet[data-visual-panel="wallet-wallet"] .wallet-phone-token-cloud,
+.site-shell-wallet[data-visual-panel="wallet-wealth"] .wallet-phone-bubbles {
+  opacity: 0;
+  visibility: hidden;
+}

@@ -1,0 +1,43 @@
+/* One motion language across every page, matching the approved Physical AI
+   reference: 18px travel, 620ms, and the same enter/leave easing. */
+.site-unified-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 620ms cubic-bezier(.22, .61, .36, 1),
+    transform 620ms cubic-bezier(.22, .61, .36, 1);
+  transition-delay: var(--site-reveal-delay, 0ms);
+  will-change: auto;
+}
+
+.site-unified-reveal.is-visible {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-unified-reveal,
+  .site-unified-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Keep the shared Wallet phone visible from the observer state even if a
+   browser coalesces scroll events while momentum scrolling. */
+.site-shell-wallet:has(#wallet-wallet.is-visible) .wallet-persistent-phone,
+.site-shell-wallet:has(#wallet-wealth.is-visible) .wallet-persistent-phone {
+  opacity: 1;
+  visibility: visible;
+}
+
+.site-shell-wallet:has(#wallet-wallet.is-visible) .wallet-phone-bubbles {
+  opacity: 1;
+  visibility: visible;
+}
+
+.site-shell-wallet:has(#wallet-wealth.is-visible) .wallet-phone-token-cloud {
+  opacity: 1;
+  visibility: visible;
+}
