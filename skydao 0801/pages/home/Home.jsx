@@ -25,8 +25,8 @@ const homeCopy = {
     aiScenes: [
       ['Ness.AI', '深度情感陪伴与互动 Choupette'],
       ['Ness.AI', '深度情感陪伴与互动 Choupette'],
-      ['Karl Lagerfeld', '标志性爱猫 Choupette 正版版权'],
-      ['Karl Lagerfeld', '标志性爱猫 Choupette 正版版权'],
+      ['LaChat', '标志性爱猫 Choupette 正版版权'],
+      ['LaChat', '标志性爱猫 Choupette 正版版权'],
     ],
     walletSubtitle: '把价值，装进口袋',
     walletCopy: '让链上资产、卡片支付与 RWA 收益在同一个入口完成连接。',
@@ -57,8 +57,8 @@ const homeCopy = {
     aiScenes: [
       ['Ness.AI', 'Deep emotional companionship and interaction'],
       ['Ness.AI', 'Intelligence entering the physical world'],
-      ['Karl Lagerfeld', 'The officially licensed Choupette'],
-      ['Karl Lagerfeld', 'A new form of future companionship'],
+      ['LaChat', 'The officially licensed Choupette'],
+      ['LaChat', 'A new form of future companionship'],
     ],
     walletSubtitle: 'Value, in your pocket',
     walletCopy: 'Connect on-chain assets, card payments and RWA yield through one gateway.',
