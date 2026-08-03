@@ -84,7 +84,6 @@ button,a{font:inherit}
 
 .hero-image-label{position:absolute;z-index:4;right:3.4vw;top:112px;display:flex;align-items:center;gap:12px;color:#fff;font-size:8px;letter-spacing:.15em;text-transform:uppercase}
 .hero-image-label i{display:block;width:28px;height:1px;background:currentColor}
-.opening-line{position:absolute;z-index:4;left:3.4vw;right:3.4vw;bottom:77px;height:1px;background:rgba(255,255,255,.35);transform-origin:left}
 
 
 /* ---------- responsive ---------- */
@@ -136,7 +135,6 @@ button,a{font:inherit}
   .qr-plate{padding:9px}
 
   .hero-image-label{position:relative;right:auto;top:auto;margin:7vh 22px 0}
-  .opening-line{display:none}
 
 }
 @media(prefers-reduced-motion:reduce){

@@ -93,7 +93,6 @@ export default function App({ onNavigate = () => {} }) {
     gsap.ticker.lagSmoothing(0)
 
     const ctx = gsap.context(() => {
-      gsap.set('.opening-line', { scaleX: 0 })
 
       // fromTo throughout: under StrictMode's double-mounted effect a plain `from`
       // can capture a mid-flight transform as its resting value and leave the
@@ -109,7 +108,6 @@ export default function App({ onNavigate = () => {} }) {
         .fromTo('.store-badge', { y: 26, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: .12, duration: .85 }, '-=1')
         .fromTo('.qr-exhibit', { y: 32, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1 }, '-=.85')
         .fromTo('.hero-image-label', { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6 }, '-=.7')
-        .to('.opening-line', { scaleX: 1, duration: 1.3 }, '<')
 
       if (!reduce) {
         gsap.to('.hero-phone', { y: -18, duration: 5, ease: 'sine.inOut', repeat: -1, yoyo: true })
@@ -217,7 +215,6 @@ export default function App({ onNavigate = () => {} }) {
           </aside>
 
           <div className="hero-image-label">02 <i /> {t.imageLabel}</div>
-          <div className="opening-line" />
           <SiteFooter locale={lang} />
         </div>
       </section>
