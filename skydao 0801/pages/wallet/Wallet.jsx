@@ -95,7 +95,7 @@ const faqs = [
 
 function WalletCta({ children, dark = false }) {
   return (
-    <a className={`wallet-rev-cta ${dark ? 'is-dark' : ''}`} href="#/wallet/download">
+    <a className={`wallet-rev-cta ${dark ? 'is-dark' : ''}`} href="/down/">
       {children}
     </a>
   )
@@ -307,7 +307,7 @@ export default function Wallet() {
             />
           ))}
         </div>
-        <a className="button wallet-clean-everything-button" href="#/wallet/wallet">
+        <a className="button wallet-clean-everything-button" href="/down/">
           <span>了解 SkyDAO Wallet</span><span className="button-arrow" aria-hidden="true">→</span>
         </a>
       </section>
@@ -320,7 +320,7 @@ export default function Wallet() {
           <div className="wallet-center-features">
             {walletItems.map((item) => <strong key={item}>{item}</strong>)}
           </div>
-          <a className="button wallet-center-button" href="#/wallet/wealth">
+          <a className="button wallet-center-button" href="/down/">
             <span>了解 SkyDAO Wallet</span><span className="button-arrow" aria-hidden="true">→</span>
           </a>
         </div>
@@ -333,7 +333,7 @@ export default function Wallet() {
           <h2>让每项资产都算数</h2>
           <span>将闲置的加密货币转化为长期价值 加密货币应该继续创造价值</span>
           <strong>保持数字资产朝着长期目标努力的有纪律的方式</strong>
-          <a className="button wallet-center-button" href="#/wallet/visa">
+          <a className="button wallet-center-button" href="/down/">
             <span>了解 SkyDAO Wallet</span><span className="button-arrow" aria-hidden="true">→</span>
           </a>
         </div>
@@ -345,7 +345,7 @@ export default function Wallet() {
           <p>SKYDAO 签证卡</p>
           <h2>像现金一样消费加密货币</h2>
           <span>在接受 Visa 的任何地方使用您的加密货币 加密货币现在是日常生活的一部分</span>
-          <a className="button wallet-center-button" href="#/wallet/flow">
+          <a className="button wallet-center-button" href="/down/">
             <span>了解 SkyDAO Wallet</span><span className="button-arrow" aria-hidden="true">→</span>
           </a>
         </div>
@@ -371,7 +371,7 @@ export default function Wallet() {
           <p>钱包到 Visa</p>
           <h2>一次转移<br />一切都变了</h2>
           <span>将价值从钱包转移到卡中，然后用于世界各地的日常时刻。</span>
-          <a className="button wallet-center-button" href="#/wallet/global">
+          <a className="button wallet-center-button" href="/down/">
             <span>了解 SkyDAO Wallet</span><span className="button-arrow" aria-hidden="true">→</span>
           </a>
         </div>
@@ -403,7 +403,7 @@ export default function Wallet() {
           <p>全球支付</p>
           <h2>你的钱包和你一起旅行</h2>
           <span>在线支付 在店内付款 提取现金 覆盖全球范围</span>
-          <a className="button wallet-center-button" href="#/wallet/security">
+          <a className="button wallet-center-button" href="/down/">
             <span>了解 SkyDAO Wallet</span><span className="button-arrow" aria-hidden="true">→</span>
           </a>
           <div className="wallet-global-pills">
@@ -420,7 +420,7 @@ export default function Wallet() {
           light
         />
         <div className="wallet-security-features">{securityItems.join(' ')}</div>
-        <a className="button wallet-security-button" href="#/wallet/wallet">
+        <a className="button wallet-security-button" href="/down/">
           <span>了解 SkyDAO Wallet</span><span className="button-arrow" aria-hidden="true">→</span>
         </a>
         <div className="wallet-security-visual" aria-hidden="true">

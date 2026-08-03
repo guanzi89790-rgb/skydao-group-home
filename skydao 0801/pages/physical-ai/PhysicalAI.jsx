@@ -114,7 +114,7 @@ export default function PhysicalAI({ locale = 'en' }) {
   }, [])
 
   useEffect(() => {
-    document.title = locale === 'zh' ? '硅基智造｜LaChat × ness' : 'Physical AI | LaChat × ness'
+    document.title = locale === 'zh' ? '硅基智造｜LaChat × NESS' : 'Physical AI | LaChat × NESS'
   }, [locale])
 
   useEffect(() => {
@@ -170,13 +170,13 @@ export default function PhysicalAI({ locale = 'en' }) {
   return (
     <main ref={pageRef} className="sai-page about-text-motion">
       <section className="sai-hero" id="sai-top">
-        <img src="/pages/physical-ai/assets/physical-ai/hero-companions-v2.webp" alt="LaChat 猫机器人与 ness 人形伴侣机器人" fetchPriority="high" />
+        <img src="/pages/physical-ai/assets/physical-ai/hero-companions-v2.webp" alt="LaChat 猫机器人与 NESS 人形伴侣机器人" fetchPriority="high" />
         <div className="sai-frame sai-hero-copy">
           <h1 className="about-text-title">{locale === 'en' ? <><span className="about-text-line"><span>A new possibility,</span></span><span className="about-text-line"><span>right by your side.</span></span></> : <><span className="about-text-line"><span>你身边，</span></span><span className="about-text-line"><span>多了一种新的可能。</span></span></>}</h1>
-          <p className="about-text-item about-text-item-1">{locale === 'en' ? <>LaChat cat robot × ness humanoid companion<br />Living with you, helping you become your best self.</> : <>LaChat 猫机器人 × ness 人形伴侣机器人<br />陪你生活，陪你成为更好的自己。</>}</p>
+          <p className="about-text-item about-text-item-1">{locale === 'en' ? <>LaChat cat robot × NESS humanoid companion<br />Living with you, helping you become your best self.</> : <>LaChat 猫机器人 × NESS 人形伴侣机器人<br />陪你生活，陪你成为更好的自己。</>}</p>
           <div className="sai-hero-actions about-text-item about-text-item-2">
             <button type="button" className="sai-pill is-dark" onClick={() => scrollToId('sai-lachat')}>{locale === 'en' ? 'Explore LaChat' : '探索 LaChat'}</button>
-            <button type="button" className="sai-pill" onClick={() => scrollToId('sai-ness')}>{locale === 'en' ? 'Explore ness' : '探索 ness'}</button>
+            <button type="button" className="sai-pill" onClick={() => scrollToId('sai-ness')}>{locale === 'en' ? 'Explore NESS' : '探索 NESS'}</button>
           </div>
         </div>
       </section>
@@ -275,13 +275,13 @@ export default function PhysicalAI({ locale = 'en' }) {
       <section className="sai-ness-overview" id="sai-ness">
         <div className="sai-ness-stage" ref={nessStageRef}>
         <div className="sai-product sai-ness">
-          <img src="/pages/physical-ai/assets/physical-ai/ness-wide-v4.webp" alt="ness 人形伴侣机器人" />
-          <img className="sai-ness-reveal-image" src="/pages/physical-ai/assets/physical-ai/ness-home-reveal.png" alt="ness 在家中陪伴生活" fetchPriority="high" />
+          <img src="/pages/physical-ai/assets/physical-ai/ness-wide-v4.webp" alt="NESS 人形伴侣机器人" />
+          <img className="sai-ness-reveal-image" src="/pages/physical-ai/assets/physical-ai/ness-home-reveal.png" alt="NESS 在家中陪伴生活" fetchPriority="high" />
           <div className="sai-frame sai-product-copy">
-            <h2>ness</h2>
+            <h2>NESS</h2>
             <h3>人形伴侣机器人</h3>
             <p>更真实的伙伴，更深的连接。</p>
-            <TextLink target="sai-technology">了解 ness</TextLink>
+            <TextLink target="sai-technology">了解 NESS</TextLink>
           </div>
           <div className="sai-frame sai-ness-reveal-copy" aria-hidden="true">
             <p className="sai-ness-reveal-kicker">NESS · HUMAN COMPANION</p>
@@ -291,7 +291,7 @@ export default function PhysicalAI({ locale = 'en' }) {
         </div>
         </div>
         <div className="sai-frame">
-          <FeatureGrid title="ness 核心能力" features={nessFeatures} embedded />
+          <FeatureGrid title="NESS 核心能力" features={nessFeatures} embedded />
         </div>
       </section>
 
@@ -313,11 +313,11 @@ export default function PhysicalAI({ locale = 'en' }) {
       </section>
 
       <section className="sai-progress" id="sai-progress">
-        <img src="/pages/physical-ai/assets/physical-ai/future-companions-v3.webp" alt="LaChat 与 ness 面向未来" />
+        <img src="/pages/physical-ai/assets/physical-ai/future-companions-v3.webp" alt="LaChat 与 NESS 面向未来" />
         <div className="sai-frame sai-progress-copy">
           <h2>未来已来，<br />让陪伴更有温度。</h2>
           <p>
-            {locale === 'zh' ? '与 LaChat 和 ness 一起，' : 'Together with LaChat and ness,'}<br />
+            {locale === 'zh' ? '与 LaChat 和 NESS 一起，' : 'Together with LaChat and NESS,'}<br />
             {locale === 'zh' ? '开启属于你的故事。' : 'begin a story of your own.'}
           </p>
           <button type="button" className="sai-pill" onClick={() => scrollToId('sai-top')}>了解产品进展</button>
@@ -327,7 +327,7 @@ export default function PhysicalAI({ locale = 'en' }) {
       <footer className="sai-footer">
         <div className="sai-frame sai-footer-grid">
           <div className="sai-footer-brand"><strong>硅基智造</strong><p>让 AI 更懂你，也更懂生活。</p></div>
-          <div><b>产品</b><a href="#/physical-ai/lachat">LaChat</a><a href="#/physical-ai/ness">ness</a><a href="#/physical-ai/system">双 AI 系统</a></div>
+          <div><b>产品</b><a href="#/physical-ai/lachat">LaChat</a><a href="#/physical-ai/ness">NESS</a><a href="#/physical-ai/system">双 AI 系统</a></div>
           <div><b>技术</b><a href="#/physical-ai/technology">设计与技术</a><a href="#/physical-ai/technology">{locale === 'zh' ? '安全与隐私' : 'Security and privacy'}</a></div>
           <div><b>支持</b><a href="#about">帮助中心</a><a href="#about">服务条款</a><a href="#about">隐私政策</a></div>
           <div><b>关于</b><a href="#about">关于我们</a><a href="#about">新闻动态</a><a href="#about">加入我们</a></div>
@@ -342,7 +342,7 @@ export default function PhysicalAI({ locale = 'en' }) {
         <div className="sai-modal" role="dialog" aria-modal="true" aria-label="产品影片">
           <button className="sai-modal-close" type="button" onClick={() => setVideoOpen(false)} aria-label="关闭影片"><X size={22} /></button>
           <img src="/pages/physical-ai/assets/physical-ai/future-companions-v3.webp" alt="" />
-          <div><Play size={28} weight="fill" /><strong>硅基智造产品影片</strong><p>LaChat × ness · 让陪伴更有温度</p></div>
+          <div><Play size={28} weight="fill" /><strong>硅基智造产品影片</strong><p>LaChat × NESS · 让陪伴更有温度</p></div>
         </div>
       )}
     </main>

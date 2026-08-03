@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Manrope:wght@200;300;400;500&display=swap');
+
+:root{
+  font-family:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Noto Sans SC",sans-serif;
+  color:#f3f6f8;background:#030506;font-synthesis:none;
+  --blue:#79bfff;--muted:#8a949d;--line:rgba(255,255,255,.18);
+}
+*{box-sizing:border-box}
+html{background:#030506;scroll-behavior:auto}
+body{margin:0;background:#030506}
+button,a{font:inherit}
+.skydao{overflow:clip;background:#030506}
+.chapter{position:relative;overflow:hidden}
+
+/* ---------- header ---------- */
+.site-header{position:fixed;z-index:90;left:0;right:0;top:0;height:78px;padding:0 3.4vw;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;border-bottom:1px solid rgba(255,255,255,.11);mix-blend-mode:difference;color:#fff}
+.brand{padding:0;width:126px;border:0;background:none;cursor:pointer}
+.brand img{display:block;width:100%}
+.header-nav{display:flex;align-items:center;justify-content:center;gap:clamp(16px,2.2vw,34px);white-space:nowrap}
+.header-nav button{display:inline-flex;align-items:center;gap:5px;border:0;background:none;color:inherit;padding:0;font-size:9px;letter-spacing:.08em;cursor:pointer;opacity:.86;transition:opacity .25s,color .25s}
+.header-nav button:hover{opacity:1;color:var(--blue)}
+.header-nav button svg{width:9px;height:9px;opacity:.6}
+.header-actions{justify-self:end;display:flex;align-items:center;gap:24px}
+.language-toggle{display:flex;align-items:center;gap:7px;padding:7px 0;border:0;background:none;color:#8d969d;font-size:8px;letter-spacing:.13em;cursor:pointer}
+.language-toggle i{width:1px;height:11px;background:rgba(255,255,255,.3)}
+.language-toggle span{transition:color .25s}
+.language-toggle span.active{color:#fff}
+.menu-toggle{display:flex;gap:9px;align-items:center;border:0;background:none;color:#fff;font-size:10px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.menu-toggle svg{width:19px;height:19px;display:block}
+
+.chapter-menu{position:fixed;z-index:80;inset:0;background:#040607f5;backdrop-filter:blur(18px);padding:120px 7vw 70px;display:grid;grid-template-columns:1fr 1fr;align-content:center;gap:0 10vw;transform:translateY(-105%);transition:transform .7s cubic-bezier(.76,0,.24,1)}
+.chapter-menu.open{transform:none}
+.chapter-menu button{display:grid;grid-template-columns:50px 1fr 24px;align-items:center;text-align:left;color:#e9edf0;background:none;border:0;border-bottom:1px solid var(--line);padding:20px 0;font-size:clamp(22px,2.3vw,38px);font-weight:300;cursor:pointer}
+.chapter-menu button span{font-size:10px;color:var(--blue)}
+.chapter-menu button svg{width:18px}
+
+.section-index{display:flex;align-items:center;gap:15px;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.section-index span{font-size:24px;font-weight:300;letter-spacing:-.04em}
+.section-index i{width:42px;height:1px;background:currentColor;opacity:.65}
+.section-index small{font-size:9px;color:#a9b1b7}
+
+/* ---------- 01 · opening ---------- */
+.hero{height:100svh;min-height:760px;background:#030609}
+.hero-stage{position:relative;height:100%;overflow:hidden}
+.hero-media{position:absolute;inset:-5%;width:110%;height:110%;object-fit:cover;object-position:center;filter:saturate(.72) contrast(1.06);will-change:transform}
+.hero-shade{position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(2,5,8,.94) 0%,rgba(2,5,8,.72) 34%,rgba(2,5,8,.3) 62%,rgba(2,5,8,.62) 100%),
+  linear-gradient(0deg,rgba(2,5,8,.7),transparent 46%)}
+
+.hero-content{position:absolute;z-index:4;left:12.7vw;top:17vh;max-width:44vw}
+.hero .section-index{margin-bottom:7vh}
+.hero-title{margin:0;font:200 clamp(58px,7.2vw,116px)/.92 "Manrope","PingFang SC","Noto Sans SC",sans-serif;letter-spacing:-.065em}
+.hero-title .line{display:block;overflow:hidden;padding-bottom:.08em}
+.hero-title .line>span{display:block}
+.hero-title .line-tail{display:inline-block;position:relative;overflow:visible}
+.title-stroke{position:absolute;left:-.05em;bottom:.01em;width:116%;height:.26em;overflow:visible}
+
+.hero-copy{margin:5vh 0 0 .2vw;max-width:34ch;color:#c6cdd2;font-size:clamp(12px,1vw,15px);line-height:1.7}
+
+
+/* Sized by height so the device always sits whole above the opening rule. */
+.hero-phone{position:absolute;z-index:3;right:33vw;bottom:100px;height:min(74vh,740px);will-change:transform,clip-path}
+.hero-phone img{display:block;height:100%;width:auto;filter:drop-shadow(0 60px 100px rgba(0,0,0,.85))}
+
+/* Download module: badges beside the QR, pinned to the lower-right of the stage. */
+.hero-get{position:absolute;z-index:4;right:3.4vw;bottom:15vh;display:flex;align-items:flex-start;gap:26px}
+
+/* Badges keep the familiar silhouette but wear the page's material:
+   hairline frame, dark glass, Manrope type. No stock artwork, no gloss. */
+.store-row{display:flex;flex-direction:column;gap:13px}
+.store-badge{display:inline-flex;align-items:center;gap:13px;min-width:214px;padding:11px 22px 11px 18px;border:1px solid rgba(255,255,255,.24);border-radius:0;background:rgba(9,13,16,.5);backdrop-filter:blur(12px);color:#fff;font:inherit;text-align:left;cursor:pointer;transition:background .35s,border-color .35s,color .35s,transform .35s}
+.store-badge:hover{background:#fff;border-color:#fff;color:#05080a;transform:translateY(-2px)}
+.store-badge-mark svg{display:block;width:26px;height:26px}
+.store-badge-text{display:flex;flex-direction:column;line-height:1.16}
+.store-badge-text small{font-size:8px;letter-spacing:.15em;text-transform:uppercase;opacity:.7}
+.store-badge-text strong{font:300 18px "Manrope",sans-serif;letter-spacing:-.02em}
+
+/* QR: a plain white plate, nothing else. */
+.qr-exhibit{width:154px;flex:none}
+.qr-plate{padding:10px;background:#fff;box-shadow:0 26px 64px rgba(0,0,0,.62)}
+.qr-plate img{display:block;width:100%;height:auto}
+
+.hero-image-label{position:absolute;z-index:4;right:3.4vw;top:112px;display:flex;align-items:center;gap:12px;color:#fff;font-size:8px;letter-spacing:.15em;text-transform:uppercase}
+.hero-image-label i{display:block;width:28px;height:1px;background:currentColor}
+.opening-line{position:absolute;z-index:4;left:3.4vw;right:3.4vw;bottom:77px;height:1px;background:rgba(255,255,255,.35);transform-origin:left}
+
+/* ---------- footer ---------- */
+.site-footer{position:relative;background:#010203;padding:11vh 3.4vw 30px;border-top:1px solid rgba(255,255,255,.09)}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6vw;flex-wrap:wrap;padding-bottom:9vh}
+.footer-brand img{width:180px;display:block}
+.footer-brand p{margin:22px 0 0;color:#8d969d;font-size:12px;line-height:1.85}
+.footer-nav{display:flex;flex-wrap:wrap;gap:14px 34px;align-items:center;max-width:60%}
+.footer-nav button{border:0;background:none;color:#d5dbe0;font-size:12px;letter-spacing:.04em;cursor:pointer;transition:color .25s}
+.footer-nav button:hover{color:var(--blue)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.09);padding-top:22px}
+.footer-legal{display:flex;align-items:center;gap:22px;flex-wrap:wrap;color:#7f8991;font-size:10px;letter-spacing:.06em}
+.footer-legal button{border:0;background:none;color:#a4adb4;font-size:10px;letter-spacing:.06em;cursor:pointer}
+.footer-social{display:flex;gap:16px}
+.footer-social button{display:grid;place-items:center;width:32px;height:32px;padding:0;border:1px solid rgba(255,255,255,.16);border-radius:50%;background:none;color:#c3cbd1;cursor:pointer;transition:color .25s,border-color .25s,background .25s}
+.footer-social button:hover{color:#05080a;background:#fff;border-color:#fff}
+.footer-social svg{width:15px;height:15px}
+
+/* ---------- responsive ---------- */
+@media(max-width:1440px){
+  .hero-content{left:7vw;max-width:48vw}
+  .hero-phone{right:32vw;height:min(68vh,620px)}
+  .hero-get{gap:20px}
+  .store-badge{min-width:196px;padding:10px 18px 10px 15px}
+  .store-badge-text strong{font-size:16px}
+  .qr-exhibit{width:136px}
+}
+@media(max-width:1180px){
+  /* Not enough width for badges beside the QR — stack the module instead. */
+  .hero-get{flex-direction:column;align-items:flex-end;gap:22px;bottom:13vh}
+  .store-row{align-items:flex-end}
+  .hero-phone{right:24vw;height:min(60vh,520px)}
+  .qr-exhibit{width:128px}
+}
+@media(max-width:1024px){
+  .hero-content{max-width:56vw}
+  .hero-phone{right:22vw;height:min(54vh,450px)}
+}
+@media(max-width:900px){
+  .site-header{height:64px;padding:0 20px;grid-template-columns:1fr auto}
+  .header-nav{display:none}
+  .brand{width:108px}
+  .header-actions{gap:14px}
+  .language-toggle{font-size:7px}
+  .menu-toggle span{display:none}
+  .chapter-menu{grid-template-columns:1fr;padding:95px 26px 35px}
+  .chapter-menu button{font-size:22px;padding:14px 0}
+
+  .hero{height:auto;min-height:0}
+  .hero-stage{height:auto;padding:104px 0 88px}
+  .hero-media{inset:0;width:100%;height:100%;object-position:62% center}
+  .hero-shade{background:linear-gradient(0deg,rgba(2,5,8,.95) 22%,rgba(2,5,8,.66) 58%,rgba(2,5,8,.82) 100%)}
+  .hero-content{position:relative;left:auto;top:auto;max-width:none;padding:0 22px}
+  .hero .section-index{margin-bottom:4vh}
+  .hero-title{font-size:clamp(50px,14vw,80px)}
+  .hero-copy{margin-top:3.5vh;max-width:none}
+  .hero-phone{position:relative;right:auto;bottom:auto;height:auto;width:min(66vw,290px);margin:8vh auto 0}
+  .hero-phone img{width:100%;height:auto}
+
+  .hero-get{position:relative;right:auto;bottom:auto;flex-direction:column;align-items:stretch;gap:26px;margin:8vh 22px 0}
+  .store-row{flex-direction:column;align-items:stretch;gap:11px}
+  .store-badge{min-width:0;padding:11px 18px 11px 15px;gap:12px}
+  .store-badge-text strong{font-size:16px}
+  .qr-exhibit{width:150px}
+  .qr-plate{padding:9px}
+
+  .hero-image-label{position:relative;right:auto;top:auto;margin:7vh 22px 0}
+  .opening-line{display:none}
+
+  .site-footer{padding:9vh 22px 26px}
+  .footer-nav{max-width:none;gap:12px 24px}
+  .footer-brand img{width:150px}
+  .footer-bottom{align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important}
+  .hero-title .line>span,.hero-phone,.title-stroke{transform:none!important;opacity:1!important;clip-path:none!important;animation:none}
+}
+html[lang="zh-CN"] .hero-title,html[lang="zh-CN"] h3{letter-spacing:-.05em}

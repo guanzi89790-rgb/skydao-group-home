@@ -2,7 +2,7 @@ import { cpSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 
-const pageNames = ['home', 'central-gate', 'physical-ai', 'wallet', 'about']
+const pageNames = ['home', 'central-gate', 'physical-ai', 'wallet', 'about', 'down']
 
 export default defineConfig({
   plugins: [
@@ -28,6 +28,7 @@ export default defineConfig({
         physicalAI: resolve(import.meta.dirname, 'physical-ai/index.html'),
         wallet: resolve(import.meta.dirname, 'wallet/index.html'),
         about: resolve(import.meta.dirname, 'about/index.html'),
+        down: resolve(import.meta.dirname, 'down/index.html'),
       },
     },
   },
