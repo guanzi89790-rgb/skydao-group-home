@@ -1,18 +1,18 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { createAboutMotion } from './about-motion.js'
 import SiteFooter from '../shared/SiteFooter.jsx'
 
 const aiImages = [
-  '/pages/home/assets/physical-ai/ness-ai-hero-new.png',
-  '/pages/home/assets/products/humanoid-robot-lab.jpg',
-  '/pages/home/assets/physical-ai/karl-lagerfeld-home.webp',
-  '/pages/home/assets/physical-ai/karl-lagerfeld-cat.png',
+  '/pages/shared/assets/physical-ai/ness-ai-hero-new.webp',
+  '/pages/shared/assets/products/humanoid-robot-lab.jpg',
+  '/pages/shared/assets/physical-ai/karl-lagerfeld-home.webp',
+  '/pages/shared/assets/physical-ai/karl-lagerfeld-cat.webp',
 ]
 
 const artImages = [
-  '/pages/home/assets/art-auction-gallery.png',
-  '/pages/home/assets/art-provenance-v2.png',
-  '/pages/home/assets/art-global-collection.png',
+  '/pages/shared/assets/art-auction-gallery.webp',
+  '/pages/shared/assets/art-provenance-v2.webp',
+  '/pages/shared/assets/art-global-collection.webp',
 ]
 
 const homeCopy = {
@@ -99,6 +99,15 @@ function ChapterLink({ href, children }) {
   )
 }
 
+function scrollPageTo(root, top, immediate = false) {
+  const lenis = root?.__cinematicLenis
+  if (lenis) {
+    lenis.scrollTo(top, { duration: immediate ? 0 : 0.72, force: true })
+    return
+  }
+  window.scrollTo({ top, behavior: immediate ? 'auto' : 'smooth' })
+}
+
 function GalleryPanel({ scene, index, total, type }) {
   return (
     <article className={`cinematic-gallery-panel cinematic-gallery-panel-${type}`}>
@@ -128,6 +137,257 @@ export default function Home({ locale = 'en' }) {
 
   useLayoutEffect(() => createAboutMotion(pageRef.current), [locale])
 
+  useEffect(() => {
+    if (!window.matchMedia('(max-width: 900px)').matches) return undefined
+    const setupGallery = (selector) => {
+      const section = pageRef.current?.querySelector(selector)
+      const stage = section?.querySelector('.cinematic-gallery-stage')
+      if (!stage || !section) return () => {}
+
+      let frame = 0
+      let snapTimer = 0
+      let snapReleaseTimer = 0
+      let horizontalGesture = false
+      let touchStartX = 0
+      let touchStartY = 0
+      let wasActive = false
+      let burstPanelIndex = null
+      let isSnapping = false
+
+      const getMetrics = () => {
+        const sectionTop = section.getBoundingClientRect().top + window.scrollY
+        const travel = Math.max(section.offsetHeight - window.innerHeight, 1)
+        const maxHorizontal = Math.max(stage.scrollWidth - stage.clientWidth, 0)
+        return { sectionTop, travel, maxHorizontal }
+      }
+
+      const snapToClosestPanel = () => {
+        snapTimer = 0
+        if (pageRef.current?.__cinematicSnap) return
+        if (horizontalGesture || isSnapping) return
+        const { sectionTop, travel, maxHorizontal } = getMetrics()
+        const sectionEnd = sectionTop + travel
+        const isActive = window.scrollY >= sectionTop && window.scrollY <= sectionEnd
+
+        if (!isActive && !wasActive) return
+
+        const clampedY = Math.min(sectionEnd, Math.max(sectionTop, window.scrollY))
+        const progress = (clampedY - sectionTop) / travel
+        const panelCount = Math.max(1, Math.round(stage.scrollWidth / stage.clientWidth))
+        const desiredPanelIndex = Math.round(progress * (panelCount - 1))
+        const startPanelIndex = burstPanelIndex ?? desiredPanelIndex
+
+        if (window.scrollY > sectionEnd && startPanelIndex >= panelCount - 1) {
+          const nextSectionTop = sectionTop + section.offsetHeight
+          burstPanelIndex = null
+          wasActive = false
+          isSnapping = true
+          stage.scrollTo({ left: maxHorizontal, behavior: 'smooth' })
+          scrollPageTo(pageRef.current, nextSectionTop)
+          window.clearTimeout(snapReleaseTimer)
+          snapReleaseTimer = window.setTimeout(() => {
+            isSnapping = false
+          }, 900)
+          return
+        }
+
+        const panelIndex = Math.min(
+          startPanelIndex + 1,
+          Math.max(startPanelIndex - 1, desiredPanelIndex),
+        )
+        burstPanelIndex = null
+        const targetProgress = panelCount > 1 ? panelIndex / (panelCount - 1) : 0
+        const targetY = sectionTop + targetProgress * travel
+
+        if (Math.abs(window.scrollY - targetY) > 3) {
+          isSnapping = true
+          scrollPageTo(pageRef.current, targetY)
+          window.clearTimeout(snapReleaseTimer)
+          snapReleaseTimer = window.setTimeout(() => {
+            isSnapping = false
+          }, 900)
+        }
+        stage.scrollTo({ left: targetProgress * maxHorizontal, behavior: 'smooth' })
+        wasActive = false
+      }
+
+      const scheduleSnap = () => {
+        if (isSnapping) return
+        window.clearTimeout(snapTimer)
+        snapTimer = window.setTimeout(snapToClosestPanel, 140)
+      }
+
+      const updateFromPageScroll = () => {
+        frame = 0
+        if (horizontalGesture) return
+        const { sectionTop, travel, maxHorizontal } = getMetrics()
+        const progress = Math.min(1, Math.max(0, (window.scrollY - sectionTop) / travel))
+        wasActive = wasActive || (window.scrollY >= sectionTop && window.scrollY <= sectionTop + travel)
+        stage.scrollLeft = progress * maxHorizontal
+        scheduleSnap()
+      }
+      const requestUpdate = () => {
+        if (!isSnapping && burstPanelIndex === null) {
+          burstPanelIndex = Math.round(stage.scrollLeft / Math.max(stage.clientWidth, 1))
+        }
+        if (!frame) frame = window.requestAnimationFrame(updateFromPageScroll)
+      }
+
+      const onTouchStart = (event) => {
+        const touch = event.touches[0]
+        touchStartX = touch.clientX
+        touchStartY = touch.clientY
+        burstPanelIndex = Math.round(stage.scrollLeft / Math.max(stage.clientWidth, 1))
+      }
+      const onWheelStart = () => {
+        if (burstPanelIndex === null) {
+          burstPanelIndex = Math.round(stage.scrollLeft / Math.max(stage.clientWidth, 1))
+        }
+      }
+      const onTouchMove = (event) => {
+        const touch = event.touches[0]
+        horizontalGesture = Math.abs(touchStartX - touch.clientX) > Math.abs(touchStartY - touch.clientY)
+      }
+      const onTouchEnd = () => {
+        if (horizontalGesture) {
+          const page = Math.round(stage.scrollLeft / stage.clientWidth)
+          const targetLeft = page * stage.clientWidth
+          const sectionTop = section.getBoundingClientRect().top + window.scrollY
+          const maxHorizontal = Math.max(stage.scrollWidth - stage.clientWidth, 1)
+          const travel = Math.max(section.offsetHeight - window.innerHeight, 1)
+          stage.scrollTo({ left: targetLeft, behavior: 'smooth' })
+          scrollPageTo(pageRef.current, sectionTop + (targetLeft / maxHorizontal) * travel, true)
+        } else {
+          scheduleSnap()
+        }
+        horizontalGesture = false
+      }
+
+      updateFromPageScroll()
+      window.addEventListener('scroll', requestUpdate, { passive: true })
+      window.addEventListener('resize', requestUpdate)
+      stage.addEventListener('touchstart', onTouchStart, { passive: true })
+      stage.addEventListener('touchmove', onTouchMove, { passive: true })
+      stage.addEventListener('touchend', onTouchEnd, { passive: true })
+      stage.addEventListener('wheel', onWheelStart, { passive: true })
+      return () => {
+        window.removeEventListener('scroll', requestUpdate)
+        window.removeEventListener('resize', requestUpdate)
+        stage.removeEventListener('touchstart', onTouchStart)
+        stage.removeEventListener('touchmove', onTouchMove)
+        stage.removeEventListener('touchend', onTouchEnd)
+        stage.removeEventListener('wheel', onWheelStart)
+        if (frame) window.cancelAnimationFrame(frame)
+        window.clearTimeout(snapTimer)
+        window.clearTimeout(snapReleaseTimer)
+      }
+    }
+
+    const cleanups = ['.cinematic-ai', '.cinematic-art'].map(setupGallery)
+    return () => cleanups.forEach((cleanup) => cleanup())
+  }, [])
+
+  useEffect(() => {
+    if (!window.matchMedia('(max-width: 900px)').matches) return undefined
+    if (pageRef.current?.__cinematicSnap) return undefined
+    const sections = Array.from(pageRef.current?.querySelectorAll(':scope > section') || [])
+    let snapTimer = 0
+    let releaseTimer = 0
+    let burstSection = null
+    let isSnapping = false
+    let lastScrollY = window.scrollY
+
+    const startSnap = (targetY) => {
+      isSnapping = true
+      scrollPageTo(pageRef.current, targetY)
+      window.clearTimeout(releaseTimer)
+      releaseTimer = window.setTimeout(() => {
+        isSnapping = false
+        lastScrollY = window.scrollY
+      }, 900)
+    }
+
+    const snapOrdinarySection = () => {
+      snapTimer = 0
+      const currentY = window.scrollY
+      const activeSection = burstSection
+      burstSection = null
+
+      if (!activeSection || activeSection.classList.contains('cinematic-gallery')) return
+
+      const sectionTop = activeSection.getBoundingClientRect().top + currentY
+      const sectionEnd = sectionTop + Math.max(0, activeSection.offsetHeight - window.innerHeight)
+      const sectionIndex = sections.indexOf(activeSection)
+      const nextSection = sections[sectionIndex + 1]
+      const snapPoints = [sectionTop, sectionEnd]
+      if (nextSection) {
+        snapPoints.push(nextSection.getBoundingClientRect().top + currentY)
+      }
+      const targetY = snapPoints.reduce((closest, point) => (
+        Math.abs(currentY - point) < Math.abs(currentY - closest) ? point : closest
+      ))
+
+      if (Math.abs(currentY - targetY) > 3) {
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        if (reducedMotion) {
+          scrollPageTo(pageRef.current, targetY, true)
+        } else {
+          startSnap(targetY)
+        }
+      }
+    }
+
+    const scheduleSnap = () => {
+      const currentY = window.scrollY
+      const aiesSection = pageRef.current?.querySelector('.cinematic-aies')
+      const aiesTop = aiesSection
+        ? aiesSection.getBoundingClientRect().top + currentY
+        : null
+      const crossedAiesTop = aiesTop !== null && (
+        (lastScrollY < aiesTop && currentY >= aiesTop)
+        || (lastScrollY > aiesTop && currentY <= aiesTop)
+      )
+
+      if (!isSnapping && crossedAiesTop) {
+        window.clearTimeout(snapTimer)
+        burstSection = null
+        startSnap(aiesTop)
+        return
+      }
+
+      lastScrollY = currentY
+      if (isSnapping) return
+      if (!burstSection) {
+        burstSection = sections.find((section) => {
+          const top = section.getBoundingClientRect().top + currentY
+          return currentY >= top && currentY < top + section.offsetHeight
+        }) || null
+      }
+      window.clearTimeout(snapTimer)
+      snapTimer = window.setTimeout(snapOrdinarySection, 160)
+    }
+
+    const captureBurstSection = () => {
+      if (isSnapping || burstSection) return
+      const currentY = window.scrollY
+      burstSection = sections.find((section) => {
+        const top = section.getBoundingClientRect().top + currentY
+        return currentY >= top && currentY < top + section.offsetHeight
+      }) || null
+    }
+
+    window.addEventListener('scroll', scheduleSnap, { passive: true })
+    window.addEventListener('touchstart', captureBurstSection, { passive: true })
+    window.addEventListener('wheel', captureBurstSection, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', scheduleSnap)
+      window.removeEventListener('touchstart', captureBurstSection)
+      window.removeEventListener('wheel', captureBurstSection)
+      window.clearTimeout(snapTimer)
+      window.clearTimeout(releaseTimer)
+    }
+  }, [])
+
   return (
     <>
     <main className="cinematic-home" ref={pageRef}>
@@ -135,7 +395,7 @@ export default function Home({ locale = 'en' }) {
         <div className="cinematic-hero-stage">
           <div className="cinematic-hero-media hero-scene-aerial about-motion-image">
             <video autoPlay muted loop playsInline preload="auto">
-              <source src="/pages/home/assets/hero/central-gate-aerial.mp4" type="video/mp4" />
+              <source src="/pages/shared/assets/hero/central-gate-aerial.mp4" type="video/mp4" />
             </video>
           </div>
           <span className="cinematic-media-shade" aria-hidden="true" />
@@ -177,7 +437,7 @@ export default function Home({ locale = 'en' }) {
         <div className="cinematic-wallet-stage">
           <div className="wallet-orbit" aria-hidden="true"><i /><i /><i /></div>
           <div className="wallet-products" aria-hidden="true">
-            <img className="wallet-device-main" src="/pages/home/assets/wallet/generated/skydao-wallet-product.png" alt="" />
+            <img className="wallet-device-main" src="/pages/shared/assets/wallet/generated/skydao-wallet-product.webp" alt="" />
           </div>
           <div className="cinematic-chapter-mark"><span>03</span><i /></div>
           <div className="wallet-story-copy about-motion-copy">
@@ -212,7 +472,7 @@ export default function Home({ locale = 'en' }) {
 
       <section className="cinematic-aies" id="aies">
         <div className="aies-media">
-          <img className="about-motion-image" src="/pages/home/assets/aies/aies-summit-collage-2026.png" alt="" />
+          <img className="about-motion-image" src="/pages/shared/assets/aies/aies-summit-collage-2026.webp" alt="" />
         </div>
         <span className="cinematic-media-shade" aria-hidden="true" />
         <div className="cinematic-chapter-mark"><span>05</span><i /></div>
@@ -226,7 +486,7 @@ export default function Home({ locale = 'en' }) {
 
       <section className="cinematic-group" id="about">
         <div className="cinematic-group-stage">
-          <img className="group-image-primary about-motion-image" src="/pages/home/assets/about/about-hongkong-skyline-01.png" alt="" />
+          <img className="group-image-primary about-motion-image" src="/pages/shared/assets/about/about-hongkong-skyline-01.webp" alt="" />
           <span className="cinematic-media-shade" aria-hidden="true" />
           <div className="cinematic-chapter-mark"><span>06</span><i /></div>
           <div className="group-editorial">

@@ -41,3 +41,87 @@
   opacity: 1;
   visibility: visible;
 }
+
+/* Mobile keeps the desktop reveal language, but uses a shorter scroll runway.
+   The product remains pinned for one viewport while the alternate scene and
+   Ness copy cross-fade, then the following content starts without a dead gap. */
+@media (max-width: 760px) {
+  .site-shell-physical-ai .sai-lachat-stage,
+  .site-shell-physical-ai .sai-ness-stage {
+    height: 134svh;
+    position: relative;
+  }
+
+  .site-shell-physical-ai .sai-lachat-stage > .sai-lachat,
+  .site-shell-physical-ai .sai-ness-stage > .sai-ness {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 0;
+    overflow: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .site-shell-physical-ai .sai-lachat-stage > .sai-lachat > img,
+  .site-shell-physical-ai .sai-ness-stage > .sai-ness > img {
+    height: 100%;
+  }
+
+  .site-shell-physical-ai .sai-lachat-reveal-image {
+    object-fit: cover;
+    object-position: 74% center;
+    opacity: clamp(0, calc((var(--lachat-reveal, 0) - .12) * 1.45), 1);
+    transition: opacity 180ms linear;
+    will-change: opacity;
+  }
+
+  .site-shell-physical-ai .sai-ness .sai-product-copy {
+    opacity: calc(1 - (var(--ness-reveal, 0) * 1.35));
+    transition: opacity 180ms linear;
+  }
+
+  .site-shell-physical-ai .sai-ness > img:first-child {
+    object-fit: cover;
+    object-position: 68% center;
+  }
+
+  .site-shell-physical-ai .sai-ness > img.sai-ness-reveal-image {
+    object-fit: cover;
+    object-position: 52% center;
+    opacity: clamp(0, calc((var(--ness-reveal, 0) - .12) * 1.45), 1);
+    transition: opacity 180ms linear;
+    will-change: opacity;
+  }
+
+  .site-shell-physical-ai .sai-ness-reveal-copy {
+    opacity: min(1, calc(var(--ness-reveal, 0) * 1.35));
+    transition: opacity 180ms linear;
+  }
+
+  .site-shell-physical-ai .sai-ness-overview > .sai-frame {
+    padding-top: 64px;
+  }
+}
+
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .site-shell-physical-ai .sai-lachat-stage,
+  .site-shell-physical-ai .sai-ness-stage {
+    height: auto;
+  }
+
+  .site-shell-physical-ai .sai-lachat-stage > .sai-lachat,
+  .site-shell-physical-ai .sai-ness-stage > .sai-ness {
+    position: relative;
+  }
+
+  .site-shell-physical-ai .sai-lachat-reveal-image,
+  .site-shell-physical-ai .sai-ness > img.sai-ness-reveal-image,
+  .site-shell-physical-ai .sai-ness-reveal-copy {
+    opacity: 0;
+  }
+
+  .site-shell-physical-ai .sai-ness .sai-product-copy {
+    opacity: 1;
+  }
+}

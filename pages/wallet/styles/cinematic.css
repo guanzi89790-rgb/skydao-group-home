@@ -115,11 +115,11 @@
 }
 
 .site-shell .site-header.is-light .brand img {
-  content: url('/pages/wallet/assets/brand/skydao-logo-dark.svg');
+  content: url('/pages/shared/assets/brand/skydao-logo-dark.svg');
 }
 
 .site-shell .site-header.is-dark .brand img {
-  content: url('/pages/wallet/assets/brand/skydao-logo-light.svg');
+  content: url('/pages/shared/assets/brand/skydao-logo-light.svg');
 }
 
 @media (max-width: 900px) {
@@ -134,6 +134,32 @@
 
   .site-shell .site-header .header-index-actions {
     gap: 18px;
+  }
+}
+
+/* Keep the Wallet hero CTAs visually consistent with the desktop treatment. */
+@media (max-width: 900px) {
+  .site-shell-wallet .wallet-clean-hero .wallet-rev-cta {
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 20px !important;
+    border-radius: 999px !important;
+    font-size: 17px !important;
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .site-shell-wallet .wallet-clean-hero .wallet-rev-cta.is-dark {
+    color: #fff !important;
+    background: #0071e3 !important;
+    border: 1px solid #0071e3 !important;
+  }
+
+  .site-shell-wallet .wallet-clean-hero .wallet-rev-cta:not(.is-dark) {
+    color: #0071e3 !important;
+    background: transparent !important;
+    border: 1px solid #0071e3 !important;
   }
 }
 
@@ -1942,4 +1968,319 @@
   font-family: "Manrope", sans-serif !important;
   font-feature-settings: normal !important;
   font-variant-position: normal !important;
+}
+
+.site-shell-wallet .wallet-faq-list .wallet-faq-item {
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.site-shell-wallet .wallet-faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  min-height: 88px;
+  padding: 20px 24px;
+  color: #1d1d1f;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.site-shell-wallet .wallet-faq-question strong {
+  flex: 1;
+}
+
+.site-shell-wallet .wallet-faq-question .wallet-faq-icon {
+  display: grid !important;
+  flex: 0 0 32px;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: #1d1d1f !important;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  background: #fff;
+  border-radius: 50%;
+  transition: color .2s ease, background-color .2s ease, transform .3s ease;
+}
+
+.site-shell-wallet .wallet-faq-item.is-open .wallet-faq-icon {
+  color: #fff !important;
+  background: #0071e3;
+}
+
+.site-shell-wallet .wallet-faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows .35s cubic-bezier(.22, .61, .36, 1), opacity .25s ease;
+}
+
+.site-shell-wallet .wallet-faq-answer p {
+  min-height: 0;
+  margin: 0;
+  padding: 0 24px;
+  overflow: hidden;
+  color: #6e6e73;
+  font-size: 15px;
+  line-height: 1.65;
+  transition: padding-bottom .35s cubic-bezier(.22, .61, .36, 1);
+}
+
+.site-shell-wallet .wallet-faq-item.is-open .wallet-faq-answer {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.site-shell-wallet .wallet-faq-item.is-open .wallet-faq-answer p {
+  padding-bottom: 24px;
+}
+
+.site-shell-wallet .wallet-faq-question:focus-visible {
+  outline: 2px solid #0071e3;
+  outline-offset: -3px;
+  border-radius: 20px;
+}
+
+.site-shell-wallet .wallet-faq-copy .wallet-faq-help {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  margin-top: 28px;
+  color: #0071e3 !important;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: color .2s ease, gap .2s ease;
+}
+
+.site-shell-wallet .wallet-faq-copy .wallet-faq-help span {
+  display: inline-flex !important;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font-size: 16px;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.site-shell-wallet .wallet-faq-copy .wallet-faq-help:hover {
+  gap: 11px;
+  color: #06c !important;
+}
+
+.site-shell-wallet .wallet-faq-copy .wallet-faq-help:focus-visible {
+  outline: 2px solid #0071e3;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Wallet mobile layout: collapse desktop fixed-width compositions to one column. */
+@media (max-width: 900px) {
+  .site-shell-wallet,
+  .site-shell-wallet .wallet-rev-page {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .site-shell-wallet .wallet-rev-page > section {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .site-shell-wallet :is(.wallet-clean-wallet, .wallet-clean-wealth, .wallet-clean-global, .wallet-faq-minimal) {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 36px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 72px 24px !important;
+  }
+
+  .site-shell-wallet :is(.wallet-center-copy, .wallet-wealth-copy, .wallet-global-copy, .wallet-faq-copy, .wallet-faq-list) {
+    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  .site-shell-wallet :is(.wallet-center-visual, .wallet-wealth-phone-visual) {
+    align-self: center !important;
+    box-sizing: border-box;
+    width: min(100%, 360px) !important;
+    min-width: 0 !important;
+    max-width: 360px !important;
+    height: 420px !important;
+    min-height: 0 !important;
+    margin: 0 auto !important;
+    transform: none !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+  }
+
+  .site-shell-wallet .wallet-center-visual {
+    background-image: url('/pages/shared/assets/wallet/generated/skydao-wallet-product.webp') !important;
+  }
+
+  .site-shell-wallet .wallet-wealth-phone-visual {
+    background-image: url('/pages/shared/assets/wallet/generated/skydao-wallet-wealth.webp') !important;
+  }
+
+  .site-shell-wallet .wallet-persistent-phone {
+    display: none !important;
+  }
+
+  .site-shell-wallet :is(.wallet-center-copy, .wallet-wealth-copy, .wallet-global-copy, .wallet-faq-copy) h2 {
+    max-width: 100% !important;
+    font-size: clamp(40px, 12vw, 54px) !important;
+    line-height: 1.05 !important;
+    letter-spacing: -.045em !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
+  .site-shell-wallet .wallet-clean-wealth .wallet-wealth-copy {
+    order: 1;
+  }
+
+  .site-shell-wallet .wallet-clean-wealth .wallet-wealth-phone-visual {
+    order: 2;
+  }
+
+  .site-shell-wallet .wallet-global-visual {
+    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .site-shell-wallet .wallet-global-visual img {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .site-shell-wallet .wallet-faq-list {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .site-shell-wallet .wallet-faq-list article {
+    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .site-shell-wallet .wallet-everything-carousel {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .site-shell-wallet .wallet-compare-premium {
+    overflow: hidden;
+  }
+
+  .site-shell-wallet .wallet-download-like-hero {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 100svh !important;
+    padding: 0 !important;
+  }
+
+  .site-shell-wallet .wallet-download-like-hero > img {
+    top: 0 !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: 620px !important;
+    max-width: 100% !important;
+    object-fit: cover !important;
+    object-position: 56% center !important;
+  }
+
+  .site-shell-wallet .wallet-download-inner {
+    box-sizing: border-box;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-content: center;
+    gap: 32px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 620px;
+    margin: 0 !important;
+    padding: 96px 24px 48px !important;
+  }
+
+  .site-shell-wallet .wallet-download-inner .wallet-clean-hero-copy {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .site-shell-wallet .wallet-download-qr-card {
+    display: none !important;
+  }
+
+  .site-shell-wallet .wallet-download-like-hero > .shared-site-footer {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    margin-top: auto;
+  }
+
+  .site-shell-wallet .wallet-rev-page :is(a.button, .wallet-rev-cta) {
+    box-sizing: border-box;
+    justify-content: center !important;
+    width: max-content;
+    max-width: 100%;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 20px !important;
+    color: #fff !important;
+    background: #0071e3 !important;
+    border: 1px solid #0071e3 !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+    font-size: 17px !important;
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .site-shell-wallet .wallet-clean-hero .wallet-rev-cta:not(.is-dark) {
+    color: #0071e3 !important;
+    background: transparent !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-shell-wallet .wallet-clean-actions {
+    flex-wrap: wrap;
+    gap: 12px !important;
+  }
+
+  .site-shell-wallet .wallet-clean-hero .wallet-rev-cta {
+    flex: 1 1 132px;
+    width: auto;
+  }
 }

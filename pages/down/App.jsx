@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { AndroidLogo, ArrowRight, List, X } from '@phosphor-icons/react'
+import { AndroidLogo } from '@phosphor-icons/react'
 import './down.css'
 import SiteFooter from '../shared/SiteFooter.jsx'
 
@@ -15,22 +15,6 @@ const asset = '/pages/down/assets'
 const QR_TARGET = 'https://skydao.com/#/download'
 const IOS_DOWNLOAD_URL = 'https://apps.apple.com/hk/app/skydao/id6499490160'
 const ANDROID_DOWNLOAD_URL = 'https://skydao.s3.ap-east-1.amazonaws.com/download/android/skydao.apk'
-
-// Mirrors the About page's primary navigation.
-const nav = [
-  ['Central Gate', '中央之门', '#/central-gate'],
-  ['Physical AI', '硅基智造', '#/physical-ai'],
-  ['SkyDAO Wallet', 'SkyDAO 钱包', '#/wallet'],
-  ['SkyDAO Art', 'SkyDAO 艺术', '#art'],
-  ['AIES', 'AIES', '#aies'],
-  ['About', '关于', '/about/'],
-]
-
-const menuItems = [
-  ['Central Gate', 'Central Gate', '#/central-gate'], ['Physical AI', '硅基智造', '#/physical-ai'],
-  ['SkyDAO Wallet', 'SkyDAO 钱包', '#/wallet'], ['SkyDAO Art', 'SkyDAO 艺术', '#art'],
-  ['AIES', 'AIES', '#aies'], ['About', '关于我们', '/about/'], ['APP Download', 'APP 下载', '/down/'],
-]
 
 const copy = {
   en: {
@@ -72,10 +56,9 @@ function StoreBadge({ icon, top, main, href }) {
   </a>
 }
 
-export default function App({ onNavigate = () => {} }) {
+export default function App({ locale = 'zh' }) {
   const root = useRef(null)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [lang, setLang] = useState('zh')
+  const lang = locale
   const t = copy[lang]
 
   useEffect(() => {
@@ -98,7 +81,6 @@ export default function App({ onNavigate = () => {} }) {
       // can capture a mid-flight transform as its resting value and leave the
       // element permanently offset. Explicit end states make that impossible.
       gsap.timeline({ defaults: { ease: 'power3.out' } })
-        .fromTo('.site-header', { yPercent: -100, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 1 })
         .fromTo('.hero-title .line > span', { yPercent: 112 }, { yPercent: 0, stagger: .12, duration: 1.25 }, '-=.45')
         .fromTo('.title-stroke', { scaleX: 0, autoAlpha: 0, transformOrigin: 'left center' }, { scaleX: 1, autoAlpha: 1, duration: .9 }, '-=.55')
         .fromTo('.hero-copy, .hero .section-index', { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: .1, duration: .8 }, '-=.85')
@@ -141,41 +123,7 @@ export default function App({ onNavigate = () => {} }) {
     }
   }, [])
 
-  const go = (target) => {
-    setMenuOpen(false)
-    if (target) onNavigate(target)
-  }
-
   return <div className="skydao skydao-down" ref={root}>
-    <header className="site-header">
-      <button className="brand" onClick={() => go('#/')} aria-label="SkyDAO Group home">
-        <img src={`${asset}/brand/skydao-logo-light.svg`} alt="SkyDAO Group" />
-      </button>
-
-      <nav className="header-nav" aria-label="Primary navigation">
-        {nav.map(([en, zh, target]) =>
-          <button key={en} onClick={() => go(target)}>{lang === 'zh' ? zh : en}</button>
-        )}
-      </nav>
-
-      <div className="header-actions">
-        <button className="language-toggle" onClick={() => setLang(lang === 'en' ? 'zh' : 'en')} aria-label={lang === 'en' ? '切换至中文' : 'Switch to English'}>
-          <span className={lang === 'en' ? 'active' : ''}>EN</span><i /><span className={lang === 'zh' ? 'active' : ''}>中文</span>
-        </button>
-        <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen}>
-          {menuOpen ? <X /> : <List />} <span>{menuOpen ? t.menu[0] : t.menu[1]}</span>
-        </button>
-      </div>
-    </header>
-
-    <aside className={`chapter-menu ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>
-      {menuItems.map(([en, zh, target], index) =>
-        <button key={en} onClick={() => go(target)}>
-          <span>{String(index + 1).padStart(2, '0')}</span>{lang === 'zh' ? zh : en}<ArrowRight />
-        </button>
-      )}
-    </aside>
-
     <main>
       <section className="hero chapter" id="download">
         <div className="hero-stage">

@@ -1,6 +1,7 @@
 /* Page-local copy of About's two-image, scroll-driven hero reveal. */
 .central-hero-reveal-stage {
   --central-hero-reveal: 0;
+  --central-hero-reveal-offset: 110svh;
   height: 175svh;
   position: relative;
 }
@@ -27,17 +28,24 @@
 }
 
 .central-hero-reveal-primary {
-  transform: scale(calc(1 + var(--central-hero-reveal) * .08));
+  transform: translateZ(0) scale(calc(1 + var(--central-hero-reveal) * .08));
   transform-origin: center;
+  backface-visibility: hidden;
   will-change: transform;
 }
 
 .central-hero-reveal-secondary {
   z-index: 1;
-  clip-path: inset(calc((1 - var(--central-hero-reveal)) * 100%) 0 0 0);
-  transform: scale(calc(1.08 - var(--central-hero-reveal) * .08));
-  transform-origin: center;
-  will-change: clip-path, transform;
+  clip-path: none;
+  overflow: hidden;
+  transform: translate3d(0, var(--central-hero-reveal-offset), 0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.central-hero-reveal-secondary img {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .central-hero-reveal-stage .central-detail-shade {

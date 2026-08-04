@@ -115,11 +115,11 @@
 }
 
 .site-shell .site-header.is-light .brand img {
-  content: url('/pages/home/assets/brand/skydao-logo-dark.svg');
+  content: url('/pages/shared/assets/brand/skydao-logo-dark.svg');
 }
 
 .site-shell .site-header.is-dark .brand img {
-  content: url('/pages/home/assets/brand/skydao-logo-light.svg');
+  content: url('/pages/shared/assets/brand/skydao-logo-light.svg');
 }
 
 @media (max-width: 900px) {
@@ -826,6 +826,8 @@
 }
 
 .cinematic-aies {
+  z-index: 1;
+  isolation: isolate;
   height: 120dvh !important;
   min-height: 780px !important;
 }
@@ -889,6 +891,8 @@
 }
 
 .cinematic-group {
+  z-index: 2;
+  isolation: isolate;
   height: 145dvh !important;
   min-height: 1040px !important;
   overflow: visible !important;
@@ -1242,11 +1246,13 @@
   }
 
   .cinematic-hero {
-    height: 160dvh !important;
-    min-height: 1080px !important;
+    height: 100svh !important;
+    min-height: 680px !important;
+    overflow: hidden !important;
   }
 
   .cinematic-hero-stage {
+    height: 100svh;
     min-height: 680px;
   }
 
@@ -1370,6 +1376,56 @@
     display: none;
   }
 
+  /* Keep the horizontal chapters in one viewport on phones, matching the
+     desktop sequence while still allowing direct touch scrolling. */
+  .cinematic-ai {
+    height: 500svh !important;
+    min-height: 3400px !important;
+    overflow: visible !important;
+  }
+
+  .cinematic-art {
+    height: 400svh !important;
+    min-height: 2720px !important;
+    overflow: visible !important;
+  }
+
+  .cinematic-ai .cinematic-gallery-stage,
+  .cinematic-art .cinematic-gallery-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 680px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: none;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cinematic-ai .cinematic-gallery-stage::-webkit-scrollbar,
+  .cinematic-art .cinematic-gallery-stage::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cinematic-ai .cinematic-gallery-track,
+  .cinematic-art .cinematic-gallery-track {
+    display: flex;
+    width: max-content;
+    height: 100%;
+  }
+
+  .cinematic-ai .cinematic-gallery-intro,
+  .cinematic-ai .cinematic-gallery-panel,
+  .cinematic-art .cinematic-gallery-intro,
+  .cinematic-art .cinematic-gallery-panel {
+    flex: 0 0 100vw;
+    width: 100vw;
+    height: 100%;
+    scroll-snap-align: none;
+  }
+
   .cinematic-wallet,
   .cinematic-group {
     height: 150dvh !important;
@@ -1434,7 +1490,7 @@
   }
 
   .aies-media img {
-    object-position: 58% center;
+    object-position: 76% center;
   }
 
   .aies-story-copy {

@@ -115,11 +115,11 @@
 }
 
 .site-shell .site-header.is-light .brand img {
-  content: url('/pages/physical-ai/assets/brand/skydao-logo-dark.svg');
+  content: url('/pages/shared/assets/brand/skydao-logo-dark.svg');
 }
 
 .site-shell .site-header.is-dark .brand img {
-  content: url('/pages/physical-ai/assets/brand/skydao-logo-light.svg');
+  content: url('/pages/shared/assets/brand/skydao-logo-light.svg');
 }
 
 @media (max-width: 900px) {

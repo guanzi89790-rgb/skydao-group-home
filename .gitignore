@@ -4,6 +4,7 @@ editable-dist/
 .vercel/
 .DS_Store
 *.log
+skydao-group-home-*-deploy-*.zip
 
 # Local visual QA artifacts
 qa-*.png

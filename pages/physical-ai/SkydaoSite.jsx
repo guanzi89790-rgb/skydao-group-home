@@ -39,14 +39,14 @@ export const featureSections = [
     subtitle: 'AI INFRASTRUCTURE × ENERGY SUMMIT · 算力能源峰会',
     copy: '集团在全球各地不定期举办的 AI 与能源算力行业大会——一个行业前沿资讯与高端对话的平台。首届 2026 · 香港。',
     button: '了解 AIES',
-    image: '/pages/physical-ai/assets/aies/aies-summit-collage-2026.png',
+    image: '/pages/shared/assets/aies/aies-summit-collage-2026.webp',
     align: 'left',
   },
 ]
 
 const aboutSlides = [
-  '/pages/physical-ai/assets/about/about-hongkong-skyline-01.png',
-  '/pages/physical-ai/assets/about/about-hongkong-skyline-02.png',
+  '/pages/shared/assets/about/about-hongkong-skyline-01.webp',
+  '/pages/shared/assets/about/about-hongkong-skyline-02.webp',
 ]
 
 const artCards = [
@@ -72,25 +72,25 @@ const artCards = [
 
 const physicalAIProducts = [
   {
-    image: '/pages/physical-ai/assets/products/ness-ai-companion.jpg',
+    image: '/pages/shared/assets/products/ness-ai-companion.jpg',
     kicker: 'Ness.AI · DISPLAY 01',
     name: 'Ness.AI',
     label: '深度情感陪伴与互动 Choupette',
   },
   {
-    image: '/pages/physical-ai/assets/products/humanoid-robot-lab.jpg',
+    image: '/pages/shared/assets/products/humanoid-robot-lab.jpg',
     kicker: 'Ness.AI · DISPLAY 02',
     name: 'Ness.AI',
     label: '深度情感陪伴与互动 Choupette',
   },
   {
-    image: '/pages/physical-ai/assets/products/designer-cat-ip.jpg',
+    image: '/pages/shared/assets/products/designer-cat-ip.jpg',
     kicker: 'KARL LAGERFELD · DISPLAY 01',
     name: 'Karl Lagerfeld',
     label: '（老佛爷）标志性爱猫 Choupette 正版版权',
   },
   {
-    image: '/pages/physical-ai/assets/products/ai-cat-companion.jpg',
+    image: '/pages/shared/assets/products/ai-cat-companion.jpg',
     kicker: 'KARL LAGERFELD · DISPLAY 02',
     name: 'Karl Lagerfeld',
     label: '（老佛爷）标志性爱猫 Choupette 正版版权',
@@ -104,7 +104,7 @@ const walletCards = [
     value: 'All-in-One',
     title: 'Digital Wallet',
     action: 'Secure asset control',
-    image: '/pages/physical-ai/assets/wallet/wallet-digital-asset.png',
+    image: '/pages/shared/assets/wallet/wallet-digital-asset.webp',
   },
   {
     badge: 'Card',
@@ -113,7 +113,7 @@ const walletCards = [
     title: 'Spend crypto anywhere',
     action: 'Instant settlement',
     cta: 'Pay',
-    image: '/pages/physical-ai/assets/wallet/wallet-global-card.png',
+    image: '/pages/shared/assets/wallet/wallet-global-card.webp',
   },
   {
     badge: 'Yield',
@@ -121,7 +121,7 @@ const walletCards = [
     value: 'RWA Yield',
     title: 'Real assets, on-chain',
     action: 'Projected returns',
-    image: '/pages/physical-ai/assets/wallet/wallet-rwa-yield.png',
+    image: '/pages/shared/assets/wallet/wallet-rwa-yield.webp',
   },
 ]
 
@@ -138,9 +138,9 @@ export function ArrowButton({ children, secondary = false, href = '#about' }) {
 }
 
 const heroImages = [
-  '/pages/physical-ai/assets/hero/central-gate-energy-base.jpg',
-  '/pages/physical-ai/assets/hero/central-gate-valley.jpg',
-  '/pages/physical-ai/assets/hero/central-gate-datacenter.jpg',
+  '/pages/shared/assets/hero/central-gate-energy-base.jpg',
+  '/pages/shared/assets/hero/central-gate-valley.jpg',
+  '/pages/shared/assets/hero/central-gate-datacenter.jpg',
 ]
 
 function HeroMedia() {
@@ -192,7 +192,7 @@ function HeroMedia() {
           poster={heroImages[0]}
           onEnded={() => setActiveMedia(0)}
         >
-          <source src="/pages/physical-ai/assets/hero/central-gate-aerial.mp4" type="video/mp4" />
+          <source src="/pages/shared/assets/hero/central-gate-aerial.mp4" type="video/mp4" />
         </video>
       </div>
     </div>
@@ -223,7 +223,7 @@ export function CentralGatePage() {
     <main className="central-page">
       <section className="hero central-detail-hero central-starship-hero fullpage-panel" id="cg-definition" data-panel-label="Definition">
         <div className="central-detail-bg" aria-hidden="true">
-          <img src="/pages/physical-ai/assets/central-gate/cg-energy-campus-20260626.png" alt="" />
+          <img src="/pages/shared/assets/central-gate/cg-energy-campus-20260626.webp" alt="" />
         </div>
         <div className="central-detail-shade" aria-hidden="true" />
         <div className="central-starship-copy">
@@ -241,7 +241,7 @@ export function CentralGatePage() {
         index="02 / 06"
         eyebrow="SYSTEM · 能源 × 算力一体化系统"
         title="能源 × 算力一体化系统"
-        background="/pages/physical-ai/assets/central-gate/cg-dc-power-corridor-20260626.png"
+        background="/pages/shared/assets/central-gate/cg-dc-power-corridor-20260626.webp"
         tone="left"
       >
         <div className="central-flow" aria-label="系统运行结构">
@@ -261,7 +261,7 @@ export function CentralGatePage() {
         index="03 / 06"
         eyebrow="CAPACITY · 工业级AI计算网络"
         title="工业级AI计算网络"
-        background="/pages/physical-ai/assets/central-gate/cg-gpu-hall-20260626.png"
+        background="/pages/shared/assets/central-gate/cg-gpu-hall-20260626.webp"
         tone="counter"
       >
         <div className="central-counter-band" aria-label="已具备能力">
@@ -277,7 +277,7 @@ export function CentralGatePage() {
         index="04 / 06"
         eyebrow="AI HORIZON · 认知驱动核心"
         title="AI进入智能体时代"
-        background="/pages/physical-ai/assets/central-gate/cg-highland-grid-20260626.png"
+        background="/pages/shared/assets/central-gate/cg-highland-grid-20260626.webp"
         tone="horizon"
       >
         <div className="central-horizon-brief">
@@ -301,7 +301,7 @@ export function CentralGatePage() {
         index="05 / 06"
         eyebrow="EXPANSION · 模块化AI基础设施网络"
         title="模块化AI基础设施网络"
-        background="/pages/physical-ai/assets/central-gate/cg-modular-buildout-20260626.png"
+        background="/pages/shared/assets/central-gate/cg-modular-buildout-20260626.webp"
         tone="left"
       >
         <div className="central-expansion-overview">
@@ -336,7 +336,7 @@ export function CentralGatePage() {
         index="06 / 06"
         eyebrow="ENERGY BASE · 现实收束"
         title="能源决定算力的边界"
-        background="/pages/physical-ai/assets/central-gate/cg-highland-grid-20260626.png"
+        background="/pages/shared/assets/central-gate/cg-highland-grid-20260626.webp"
         tone="final"
       >
         <div className="central-final-grid">
@@ -701,7 +701,7 @@ export function OfficialFooter({ locale = 'zh' }) {
         <div className="official-footer-top">
           <span className="official-footer-index">07 / EPILOGUE</span>
           <div className="official-footer-brand">
-            <img src="/pages/physical-ai/assets/brand/skydao-logo-light.svg" alt="SkyDAO" />
+            <img src="/pages/shared/assets/brand/skydao-logo-light.svg" alt="SkyDAO" />
             <p>打通数位与现实，重塑未来金融边界</p>
           </div>
           <nav className="official-footer-nav" aria-label="頁腳導航">

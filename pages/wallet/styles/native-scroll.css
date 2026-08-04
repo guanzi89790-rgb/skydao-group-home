@@ -71,3 +71,15 @@
   opacity: 0;
   visibility: hidden;
 }
+
+/* Wallet uses continuous native scrolling; disable the legacy full-page
+   snap declarations that still exist in the imported base stylesheet. */
+html:has(.site-shell-wallet) {
+  scroll-snap-type: none !important;
+  scroll-behavior: auto;
+}
+
+.site-shell-wallet .wallet-clean-page .fullpage-panel {
+  scroll-snap-align: none !important;
+  scroll-snap-stop: normal !important;
+}

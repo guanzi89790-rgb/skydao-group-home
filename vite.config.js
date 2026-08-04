@@ -1,22 +1,47 @@
-import { cpSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { copyFileSync, cpSync, existsSync, mkdirSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
 import { defineConfig } from 'vite'
 
-const pageNames = ['home', 'central-gate', 'physical-ai', 'wallet', 'about', 'down']
+const sharedAssetPrefix = '/pages/shared/assets/'
+const sharedAssetPattern = /\/pages\/shared\/assets\/([^"'`\s)?#]+?\.(?:png|jpe?g|webp|svg|mp4|ico))/gi
 
 export default defineConfig({
   plugins: [
     {
       name: 'copy-independent-page-assets',
-      writeBundle(options) {
+      writeBundle(options, bundle) {
         const outputDir = options.dir || resolve(import.meta.dirname, 'editable-dist')
-        for (const page of pageNames) {
-          cpSync(
-            resolve(import.meta.dirname, 'pages', page, 'assets'),
-            resolve(outputDir, 'pages', page, 'assets'),
-            { recursive: true },
-          )
+
+        const referencedSharedAssets = new Set()
+        for (const output of Object.values(bundle)) {
+          const content = output.type === 'chunk'
+            ? output.code
+            : typeof output.source === 'string'
+              ? output.source
+              : output.source?.toString()
+
+          if (!content?.includes(sharedAssetPrefix)) continue
+          for (const match of content.matchAll(sharedAssetPattern)) {
+            referencedSharedAssets.add(decodeURIComponent(match[1]))
+          }
         }
+
+        for (const relativePath of referencedSharedAssets) {
+          if (relativePath.includes('..')) throw new Error(`Unsafe shared asset path: ${relativePath}`)
+
+          const sourcePath = resolve(import.meta.dirname, 'pages', 'shared', 'assets', relativePath)
+          if (!existsSync(sourcePath)) throw new Error(`Missing shared asset: ${relativePath}`)
+
+          const targetPath = resolve(outputDir, 'pages', 'shared', 'assets', relativePath)
+          mkdirSync(dirname(targetPath), { recursive: true })
+          copyFileSync(sourcePath, targetPath)
+        }
+
+        cpSync(
+          resolve(import.meta.dirname, 'pages', 'down', 'assets'),
+          resolve(outputDir, 'pages', 'down', 'assets'),
+          { recursive: true },
+        )
       },
     },
   ],

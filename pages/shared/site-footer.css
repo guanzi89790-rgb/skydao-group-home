@@ -50,3 +50,14 @@
     display: inline;
   }
 }
+
+/* Keep the shared footer's standard height on the wallet download panel. */
+.site-shell-wallet .wallet-clean-page .shared-site-footer.shared-site-footer {
+  height: clamp(92px, 8vh, 112px) !important;
+}
+
+@media (max-width: 700px) {
+  .site-shell-wallet .wallet-clean-page .shared-site-footer.shared-site-footer {
+    height: 92px !important;
+  }
+}

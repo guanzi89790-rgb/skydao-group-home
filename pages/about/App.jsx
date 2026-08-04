@@ -9,11 +9,11 @@ import SiteFooter from '../shared/SiteFooter.jsx'
 gsap.registerPlugin(ScrollTrigger)
 
 const ecosystem = [
-  { en: ['SkyDAO Collections', 'Digital ownership.|Trusted asset infrastructure.'], zh: ['SkyDAO Collections', '探索数字资产与艺术生态的新连接。|让确权、托管与流通更加高效。'], image: '/pages/about/assets/generated/collections-gallery.png' },
-  { en: ['SkyDAO Wallet', 'A gateway for digital finance.|Connected to the Visa network.'], zh: ['SkyDAO Wallet', '连接数字资产与现实支付场景。|接入 Visa 全球支付网络。'], image: '/pages/about/assets/generated/wallet-cards.png' },
-  { en: ['Trust Services', 'Trusted custody.|Compliance-led asset services.'], zh: ['信托服务', '以合规为基础，|构建可信的资产托管服务。'], image: '/pages/about/assets/generated/trust-services-v2.png' },
-  { en: ['Central Gate', '3GW planned · 300MW initial.|Energy, data centers and GPU clusters.'], zh: ['Central Gate', '规划规模 3GW · 首期建设 300MW。|能源、数据中心与 GPU 集群一体化。'], image: '/pages/about/assets/generated/blue-infrastructure.png' },
-  { en: ['Global Network', 'Connecting Asia,|the Middle East and global markets.'], zh: ['全球网络', '连接亚洲、|中东及全球市场。'], image: '/pages/about/assets/generated/global-network.png' },
+  { en: ['SkyDAO Collections', 'Digital ownership.|Trusted asset infrastructure.'], zh: ['SkyDAO Collections', '探索数字资产与艺术生态的新连接。|让确权、托管与流通更加高效。'], image: '/pages/shared/assets/generated/collections-gallery.webp' },
+  { en: ['SkyDAO Wallet', 'A gateway for digital finance.|Connected to the Visa network.'], zh: ['SkyDAO Wallet', '连接数字资产与现实支付场景。|接入 Visa 全球支付网络。'], image: '/pages/shared/assets/generated/wallet-cards.webp' },
+  { en: ['Trust Services', 'Trusted custody.|Compliance-led asset services.'], zh: ['信托服务', '以合规为基础，|构建可信的资产托管服务。'], image: '/pages/shared/assets/generated/trust-services-v2.webp' },
+  { en: ['Central Gate', '3GW planned · 300MW initial.|Energy, data centers and GPU clusters.'], zh: ['Central Gate', '规划规模 3GW · 首期建设 300MW。|能源、数据中心与 GPU 集群一体化。'], image: '/pages/shared/assets/generated/blue-infrastructure.webp' },
+  { en: ['Global Network', 'Connecting Asia,|the Middle East and global markets.'], zh: ['全球网络', '连接亚洲、|中东及全球市场。'], image: '/pages/shared/assets/generated/global-network.webp' },
 ]
 
 const networkNodes = [
@@ -67,10 +67,10 @@ function SectionIndex({ number, label }) {
   return <div className="section-index"><span>{number}</span><i /><small>{label}</small></div>
 }
 
-export default function App({ onNavigate = () => {} }) {
+export default function App({ locale = 'en' }) {
   const root = useRef(null)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [lang, setLang] = useState('en')
+  const lang = locale
   const t = copy[lang]
   const chapters = t.chapters.map((label, index) => [String(index + 1).padStart(2, '0'), label])
 
@@ -91,7 +91,6 @@ export default function App({ onNavigate = () => {} }) {
     const ctx = gsap.context(() => {
       gsap.set('.opening-line', { scaleX: 0 })
       gsap.timeline({ defaults: { ease: 'power3.out' } })
-        .from('.site-header', { yPercent: -100, autoAlpha: 0, duration: 1 })
         .from('.hero-title .line > span', { yPercent: 110, stagger: .12, duration: 1.25 }, '-=.45')
         .from('.hero-copy, .hero-scroll, .hero .section-index', { y: 24, autoAlpha: 0, stagger: .1, duration: .8 }, '-=.7')
         .to('.opening-line', { scaleX: 1, duration: 1.3 }, '<')
@@ -173,36 +172,13 @@ export default function App({ onNavigate = () => {} }) {
     document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const navigateToPage = (target) => {
-    setMenuOpen(false)
-    onNavigate(target)
-  }
-
   return <div className="skydao" ref={root}>
-    <header className="site-header">
-      <button className="brand" onClick={() => onNavigate('#/')} aria-label="SkyDAO Group home">
-        <img src="/pages/about/assets/brand/skydao-logo-light.svg" alt="SkyDAO Group" />
-      </button>
-      <nav className="header-nav" aria-label="Primary navigation">
-        {[
-          ['Central Gate', '中央之门', '#/central-gate'], ['Physical AI', '硅基智造', '#/physical-ai'],
-          ['SkyDAO Wallet', 'SkyDAO 钱包', '#/wallet'], ['SkyDAO Art', 'SkyDAO 艺术', '#art'],
-          ['AIES', 'AIES', '#aies'], ['About', '关于', '/about/'],
-        ].map(([en, zh, target]) =>
-          <button key={en} onClick={() => navigateToPage(target)}>{lang === 'zh' ? zh : en}</button>
-        )}
-      </nav>
-      <div className="header-actions">
-        <button className="language-toggle" onClick={() => setLang(lang === 'en' ? 'zh' : 'en')} aria-label={lang === 'en' ? '切换至中文' : 'Switch to English'}>
-          <span className={lang === 'en' ? 'active' : ''}>EN</span><i /><span className={lang === 'zh' ? 'active' : ''}>中文</span>
-        </button>
-        <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen}>
-          {menuOpen ? <X /> : <List />} <span>{menuOpen ? t.menu[0] : t.menu[1]}</span>
-        </button>
-      </div>
-    </header>
+    <button className="chapter-navigation-toggle" type="button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="about-chapter-menu">
+      {menuOpen ? <X /> : <List />}
+      <span>{menuOpen ? t.menu[0] : (lang === 'zh' ? '章节' : 'CHAPTERS')}</span>
+    </button>
 
-    <aside className={`chapter-menu ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>
+    <aside id="about-chapter-menu" className={`chapter-menu ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>
       {chapters.map(([number, label]) =>
         <button key={number} onClick={() => goTo(`#chapter-${number}`)}><span>{number}</span>{label}<ArrowRight /></button>
       )}
@@ -212,8 +188,8 @@ export default function App({ onNavigate = () => {} }) {
       <section className="hero chapter" id="opening">
         <span id="chapter-01" className="anchor" />
         <div className="hero-stage">
-          <img className="hero-media hero-media-primary" src="/pages/about/assets/generated/hongkong-night.png" alt="Hong Kong harbour at night" />
-          <img className="hero-media hero-media-secondary" src="/pages/about/assets/generated/skydao-hongkong-street.png" alt="SkyDAO presence in Hong Kong" />
+          <img className="hero-media hero-media-primary" src="/pages/shared/assets/generated/hongkong-night.webp" alt="Hong Kong harbour at night" />
+          <img className="hero-media hero-media-secondary" src="/pages/shared/assets/generated/skydao-hongkong-street.webp" alt="SkyDAO presence in Hong Kong" />
           <div className="hero-shade" />
           <div className="hero-shade-secondary" />
           <div className="hero-content">
@@ -230,7 +206,7 @@ export default function App({ onNavigate = () => {} }) {
       </section>
 
       <section className="infrastructure chapter" id="chapter-02">
-        <img className="infra-image" src="/pages/about/assets/generated/blue-infrastructure.png" alt="Future financial data infrastructure" />
+        <img className="infra-image" src="/pages/shared/assets/generated/blue-infrastructure.webp" alt="Future financial data infrastructure" />
         <div className="infra-vignette" />
         <SectionIndex number="02" label={t.foundation} />
         <div className="infra-copy">
@@ -267,13 +243,13 @@ export default function App({ onNavigate = () => {} }) {
         <div className="license-stage">
           <article className="license-object">
             <div className="license-frame">
-              <div className="license-glass"><img src="/pages/about/assets/licenses/skydao-tcsp-license.png" alt="SkyDAO Trust Limited Hong Kong TCSP licence" /></div>
+              <div className="license-glass"><img src="/pages/shared/assets/licenses/skydao-tcsp-license.webp" alt="SkyDAO Trust Limited Hong Kong TCSP licence" /></div>
             </div>
             <div className="license-caption"><span>{t.licenseRegion}</span><h3><Lines text={t.licenseName} /></h3><small>{t.licensed}</small></div>
           </article>
           <article className="license-object">
             <div className="license-frame">
-              <div className="license-glass"><img src="/pages/about/assets/licenses/skydao-msb-license.png" alt="SkyDAO Trust Limited United States MSB registration" /></div>
+              <div className="license-glass"><img src="/pages/shared/assets/licenses/skydao-msb-license.webp" alt="SkyDAO Trust Limited United States MSB registration" /></div>
             </div>
             <div className="license-caption"><span>{t.registrationRegion}</span><h3><Lines text={t.registrationName} /></h3><small>{t.registered}</small></div>
           </article>
@@ -281,7 +257,7 @@ export default function App({ onNavigate = () => {} }) {
       </section>
 
       <section className="wallet chapter" id="chapter-05">
-        <img className="wallet-scene" src="/pages/about/assets/about-reference/wallet.png" alt="SkyDAO Wallet and payment card" />
+        <img className="wallet-scene" src="/pages/shared/assets/about-reference/wallet.webp" alt="SkyDAO Wallet and payment card" />
         <div className="wallet-scene-shade" />
         <div className="wallet-copy reveal-copy">
           <SectionIndex number="05" label={t.walletIndex} />
@@ -291,7 +267,7 @@ export default function App({ onNavigate = () => {} }) {
       </section>
 
       <section className="network chapter" id="chapter-06">
-        <img className="network-background" src="/pages/about/assets/generated/global-network.png" alt="Global financial network across Asia" />
+        <img className="network-background" src="/pages/shared/assets/generated/global-network.webp" alt="Global financial network across Asia" />
         <div className="network-background-shade" />
         <SectionIndex number="06" label={t.network} />
         <div className="network-copy reveal-copy">
@@ -308,9 +284,9 @@ export default function App({ onNavigate = () => {} }) {
         <div className="founder-pin">
           <div className="founder-track">
             {[
-              { label: t.founder, title: t.quote, body: t.founderName, meta: t.role, image: '/pages/about/assets/generated/about-founder-neo.png' },
-              { label: t.founderOriginLabel, title: t.founderOrigin, body: t.founderExperience, meta: '02 / 03', image: '/pages/about/assets/generated/about-founder-hk.png' },
-              { label: t.founderVisionLabel, title: t.founderVision, body: t.founderMission, meta: '03 / 03', image: '/pages/about/assets/generated/blue-infrastructure.png' },
+              { label: t.founder, title: t.quote, body: t.founderName, meta: t.role, image: '/pages/shared/assets/generated/about-founder-neo.webp' },
+              { label: t.founderOriginLabel, title: t.founderOrigin, body: t.founderExperience, meta: '02 / 03', image: '/pages/shared/assets/generated/about-founder-hk.webp' },
+              { label: t.founderVisionLabel, title: t.founderVision, body: t.founderMission, meta: '03 / 03', image: '/pages/shared/assets/generated/blue-infrastructure.webp' },
             ].map((panel, index) => <article className={`founder-panel founder-panel-${index + 1}`} key={panel.label}>
               <img src={panel.image} alt="" aria-hidden="true" />
               <div className="founder-panel-shade" />
@@ -329,7 +305,7 @@ export default function App({ onNavigate = () => {} }) {
         <div className="final-grid" /><div className="final-point" />
         <SectionIndex number="08" label={t.finale} />
         <div className="final-copy reveal-copy">
-          <img src="/pages/about/assets/brand/skydao-logo-light.svg" alt="SkyDAO Group" />
+          <img src="/pages/shared/assets/brand/skydao-logo-light.svg" alt="SkyDAO Group" />
           <h2><Lines text={t.finaleTitle} /></h2>
           <a href="mailto:operation@skydao.com">{t.conversation} <ArrowRight /></a>
         </div>

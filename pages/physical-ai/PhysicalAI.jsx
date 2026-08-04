@@ -38,11 +38,11 @@ const nessFeatures = [
 ]
 
 const technology = [
-  ['/pages/physical-ai/assets/physical-ai/precision-chip.webp', '精密硬件', '自研核心模块', '稳定可靠'],
-  ['/pages/physical-ai/assets/physical-ai/biomimetic-design.webp', '仿生设计', '自然灵动', '细节温润'],
-  ['/pages/physical-ai/assets/physical-ai/cloud-brain.webp', '端云协同', '本地隐私计算', '云端能力增强'],
-  ['/pages/physical-ai/assets/physical-ai/privacy-ness-v2.webp', '安全隐私', '多重隐私机制', '数据安心'],
-  ['/pages/physical-ai/assets/physical-ai/open-ecosystem.webp', '开放生态', '持续拓展', '丰富体验'],
+  ['/pages/shared/assets/physical-ai/precision-chip.webp', '精密硬件', '自研核心模块', '稳定可靠'],
+  ['/pages/shared/assets/physical-ai/biomimetic-design.webp', '仿生设计', '自然灵动', '细节温润'],
+  ['/pages/shared/assets/physical-ai/cloud-brain.webp', '端云协同', '本地隐私计算', '云端能力增强'],
+  ['/pages/shared/assets/physical-ai/privacy-ness-v2.webp', '安全隐私', '多重隐私机制', '数据安心'],
+  ['/pages/shared/assets/physical-ai/open-ecosystem.webp', '开放生态', '持续拓展', '丰富体验'],
 ]
 
 function scrollToId(id) {
@@ -171,7 +171,7 @@ export default function PhysicalAI({ locale = 'en' }) {
   return (
     <main ref={pageRef} className="sai-page about-text-motion">
       <section className="sai-hero" id="sai-top">
-        <img src="/pages/physical-ai/assets/physical-ai/hero-companions-v2.webp" alt="LaChat 猫机器人与 Ness 人形伴侣机器人" fetchPriority="high" />
+        <img src="/pages/shared/assets/physical-ai/hero-companions-v2.webp" alt="LaChat 猫机器人与 Ness 人形伴侣机器人" fetchPriority="high" />
         <div className="sai-frame sai-hero-copy">
           <h1 className="about-text-title">{locale === 'en' ? <><span className="about-text-line"><span>A new possibility,</span></span><span className="about-text-line"><span>right by your side.</span></span></> : <><span className="about-text-line"><span>你身边，</span></span><span className="about-text-line"><span>多了一种新的可能。</span></span></>}</h1>
           <p className="about-text-item about-text-item-1">{locale === 'en' ? <>LaChat cat robot × Ness humanoid companion<br />Living with you, helping you become your best self.</> : <>LaChat 猫机器人 × Ness 人形伴侣机器人<br />陪你生活，陪你成为更好的自己。</>}</p>
@@ -184,8 +184,8 @@ export default function PhysicalAI({ locale = 'en' }) {
 
       <section className="sai-lachat-stage" ref={lachatStageRef}>
       <section className="sai-product sai-lachat" id="sai-lachat">
-        <img src="/pages/physical-ai/assets/physical-ai/lachat-home-v2.webp" alt="LaChat 猫机器人在温暖居家环境中" />
-        <img className="sai-lachat-reveal-image" src="/pages/physical-ai/assets/physical-ai/lachat-reveal.png" alt="LaChat 猫咪伙伴" fetchPriority="high" />
+        <img src="/pages/shared/assets/physical-ai/lachat-home-v2.webp" alt="LaChat 猫机器人在温暖居家环境中" />
+        <img className="sai-lachat-reveal-image" src="/pages/shared/assets/physical-ai/lachat-reveal.webp" alt="LaChat 猫咪伙伴" fetchPriority="high" />
         <div className="sai-frame sai-product-copy">
           <h2>LaChat</h2>
           <h3>猫机器人伴侣</h3>
@@ -206,7 +206,7 @@ export default function PhysicalAI({ locale = 'en' }) {
             </div>
             <div className="sai-system-grid">
               <article className="sai-system-card is-hardware">
-                <img src="/pages/physical-ai/assets/physical-ai/dual-ai-hardware-v2.webp" alt="LaChat 硬件端" />
+                <img src="/pages/shared/assets/physical-ai/dual-ai-hardware-v2.webp" alt="LaChat 硬件端" />
                 <div className="sai-system-copy">
                   <div className="sai-system-copy-heading">
                     <h3>硬件端</h3>
@@ -255,7 +255,7 @@ export default function PhysicalAI({ locale = 'en' }) {
                 <span className="sai-signal-label"><strong>双向连接</strong><small>实时协同</small></span>
               </div>
               <article className="sai-system-card is-software">
-                <img src="/pages/physical-ai/assets/physical-ai/dual-ai-software-v2.webp" alt="LaChat App 软件端" />
+                <img src="/pages/shared/assets/physical-ai/dual-ai-software-v2.webp" alt="LaChat App 软件端" />
                 <div className="sai-system-copy">
                   <div className="sai-system-copy-heading">
                     <h3>软件端</h3>
@@ -276,8 +276,8 @@ export default function PhysicalAI({ locale = 'en' }) {
       <section className="sai-ness-overview" id="sai-ness">
         <div className="sai-ness-stage" ref={nessStageRef}>
         <div className="sai-product sai-ness">
-          <img src="/pages/physical-ai/assets/physical-ai/ness-wide-v4.webp" alt="Ness 人形伴侣机器人" />
-          <img className="sai-ness-reveal-image" src="/pages/physical-ai/assets/physical-ai/ness-home-reveal.png" alt="Ness 在家中陪伴生活" fetchPriority="high" />
+          <img src="/pages/shared/assets/physical-ai/ness-wide-v4.webp" alt="Ness 人形伴侣机器人" />
+          <img className="sai-ness-reveal-image" src="/pages/shared/assets/physical-ai/ness-home-reveal.webp" alt="Ness 在家中陪伴生活" fetchPriority="high" />
           <div className="sai-frame sai-product-copy">
             <h2>Ness</h2>
             <h3>人形伴侣机器人</h3>
@@ -314,7 +314,7 @@ export default function PhysicalAI({ locale = 'en' }) {
       </section>
 
       <section className="sai-progress" id="sai-progress">
-        <img src="/pages/physical-ai/assets/physical-ai/future-companions-v3.webp" alt="LaChat 与 Ness 面向未来" />
+        <img src="/pages/shared/assets/physical-ai/future-companions-v3.webp" alt="LaChat 与 Ness 面向未来" />
         <div className="sai-frame sai-progress-copy">
           <h2>未来已来，<br />让陪伴更有温度。</h2>
           <p>
@@ -329,7 +329,7 @@ export default function PhysicalAI({ locale = 'en' }) {
       {videoOpen && (
         <div className="sai-modal" role="dialog" aria-modal="true" aria-label="产品影片">
           <button className="sai-modal-close" type="button" onClick={() => setVideoOpen(false)} aria-label="关闭影片"><X size={22} /></button>
-          <img src="/pages/physical-ai/assets/physical-ai/future-companions-v3.webp" alt="" />
+          <img src="/pages/shared/assets/physical-ai/future-companions-v3.webp" alt="" />
           <div><Play size={28} weight="fill" /><strong>硅基智造产品影片</strong><p>LaChat × Ness · 让陪伴更有温度</p></div>
         </div>
       )}

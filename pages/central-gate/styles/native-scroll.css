@@ -41,3 +41,66 @@
   opacity: 1;
   visibility: visible;
 }
+
+/* Central Gate's filtered, oversized backgrounds are expensive to animate
+   while two full-page panels overlap during a snap transition. Keep the
+   composition static; the page transition and content reveal still provide
+   motion without continuously re-rasterizing multiple large image layers. */
+.site-shell-central-gate .central-detail-panel::before {
+  animation: none;
+  filter: none;
+  transform: scale(1.035);
+  will-change: auto;
+}
+
+.site-shell-central-gate .central-detail-panel.is-render-active::before {
+  animation: none;
+  filter: none;
+  transform: scale(1.035);
+  will-change: auto;
+}
+
+/* Central Gate uses continuous native scrolling. Disable legacy full-page
+   snap declarations from the imported base stylesheet. */
+html:has(.site-shell-central-gate) {
+  scroll-snap-type: none !important;
+  scroll-behavior: auto;
+}
+
+.site-shell-central-gate .central-page :is(.fullpage-panel, .central-detail-panel) {
+  scroll-snap-align: none !important;
+  scroll-snap-stop: normal !important;
+}
+
+@media (max-width: 700px) {
+  .site-shell.site-shell-central-gate .central-page .central-detail-panel {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .site-shell.site-shell-central-gate .central-page .central-detail-panel::before,
+  .site-shell.site-shell-central-gate .central-page .central-detail-panel.is-render-active::before {
+    inset: 0 !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  .site-shell.site-shell-central-gate .central-page .central-detail-content {
+    text-shadow: none !important;
+  }
+
+  /* The shared footer is absolutely anchored to the bottom. Give the final
+     chapter its own footer zone instead of letting it cover the definition
+     copy, and keep enough room on shorter phones for the stacked columns. */
+  .site-shell.site-shell-central-gate .central-page #cg-energy-base.central-detail-panel {
+    display: block !important;
+    height: auto !important;
+    min-height: max(calc(100svh + 92px), 940px) !important;
+    padding-top: 88px !important;
+    padding-bottom: 116px !important;
+  }
+
+  .site-shell.site-shell-central-gate #cg-energy-base .central-detail-content {
+    height: auto !important;
+  }
+}

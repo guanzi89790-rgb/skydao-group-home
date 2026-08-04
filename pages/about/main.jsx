@@ -1,12 +1,17 @@
-import { StrictMode } from 'react'
+import { StrictMode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import About from './App.jsx'
+import SiteNavigation from '../shared/SiteNavigation.jsx'
+import { getInitialLocale } from '../shared/language.js'
 
-const destinations = {
-  '#/': '/', '#/central-gate': '/central-gate/', '#/physical-ai': '/physical-ai/',
-  '#/wallet': '/wallet/', '#art': '/#art', '#aies': '/#aies', '/about/': '/about/',
+function AboutApp() {
+  const [locale, setLocale] = useState(() => getInitialLocale())
+  const navigate = (target) => { window.location.href = target }
+
+  return <div className="site-shell site-shell-about">
+    <SiteNavigation currentPage="about" locale={locale} onLocaleChange={setLocale} onNavigate={navigate} theme="dark" />
+    <About locale={locale} />
+  </div>
 }
 
-const navigate = (target) => { window.location.href = destinations[target] || target }
-
-createRoot(document.getElementById('root')).render(<StrictMode><About onNavigate={navigate} /></StrictMode>)
+createRoot(document.getElementById('root')).render(<StrictMode><AboutApp /></StrictMode>)

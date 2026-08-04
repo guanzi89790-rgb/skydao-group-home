@@ -2,8 +2,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { playAboutTextMotion } from './about-text-motion'
 import SiteFooter from '../shared/SiteFooter.jsx'
 
-const imageBase = '/pages/wallet/assets/wallet/generated'
-
 const balances = [
   ['BTC', '比特币', '64,240 美元'],
   ['USDT', '美元', '28,400 美元'],
@@ -15,25 +13,25 @@ const everything = [
     label: 'Store',
     title: '商店',
     copy: '安全管理加密资产',
-    image: '/pages/wallet/assets/wallet/wallet-digital-asset.png',
+    image: '/pages/shared/assets/wallet/wallet-digital-asset.webp',
   },
   {
     label: 'Growth',
     title: '成长',
     copy: '灵活管理财富',
-    image: '/pages/wallet/assets/wallet/wallet-rwa-yield.png',
+    image: '/pages/shared/assets/wallet/wallet-rwa-yield.webp',
   },
   {
     label: 'Spend',
     title: '花费',
     copy: '使用 Visa 全球付款',
-    image: '/pages/wallet/assets/wallet/wallet-global-card.png',
+    image: '/pages/shared/assets/wallet/wallet-global-card.webp',
   },
   {
     label: 'Transfer',
     title: '转移',
     copy: '即时移动资产',
-    image: '/pages/wallet/assets/wallet/provided/transfer-cafe.png',
+    image: '/pages/shared/assets/wallet/provided/transfer-cafe.webp',
   },
 ]
 
@@ -52,32 +50,32 @@ const complianceCards = [
     label: 'Hong Kong',
     title: '香港',
     copy: '区域准入',
-    image: '/pages/wallet/assets/wallet/provided/global-slide-1.png',
+    image: '/pages/shared/assets/wallet/provided/global-slide-1.webp',
   },
   {
     label: 'United States',
     title: '美国',
     copy: '全球标准',
-    image: '/pages/wallet/assets/wallet/provided/global-slide-2.png',
+    image: '/pages/shared/assets/wallet/provided/global-slide-2.webp',
   },
   {
     label: 'License',
     title: '执照',
     copy: '清晰基础',
-    image: '/pages/wallet/assets/wallet/generated/skydao-wallet-security.png',
+    image: '/pages/shared/assets/wallet/generated/skydao-wallet-security.webp',
   },
   {
     label: 'Control',
     title: '持续控制',
     copy: '长期运营',
-    image: '/pages/wallet/assets/wallet/generated/skydao-wallet-product.png',
+    image: '/pages/shared/assets/wallet/generated/skydao-wallet-product.webp',
   },
 ]
 
 const globalSlides = [
-  '/pages/wallet/assets/wallet/provided/visa-scene.png',
-  '/pages/wallet/assets/wallet/provided/global-slide-1.png',
-  '/pages/wallet/assets/wallet/provided/global-slide-2.png',
+  '/pages/shared/assets/wallet/provided/visa-scene.webp',
+  '/pages/shared/assets/wallet/provided/global-slide-1.webp',
+  '/pages/shared/assets/wallet/provided/global-slide-2.webp',
 ]
 
 const compareRows = [
@@ -89,9 +87,27 @@ const compareRows = [
 ]
 
 const faqs = [
-  '为什么我的身份验证没有通过？',
-  '我可以使用 SkyDAO 支付订阅服务或其他费用吗？',
-  'SkyDAO 安全吗？',
+  {
+    question: { zh: '如何获取 SkyDAO 卡？', en: 'How do I get a SkyDAO card?' },
+    answer: {
+      zh: '下载 SkyDAO APP，完成身份认证，即可在线申请实体卡。下单后，卡片将寄送到您指定的地址。',
+      en: 'Download the SkyDAO app and complete identity verification to apply for a physical card online. Once your order is placed, the card will be shipped to your specified address.',
+    },
+  },
+  {
+    question: { zh: '我可以使用 SkyDAO 支付订阅服务或其他费用吗？', en: 'Can I use SkyDAO to pay subscriptions or other bills?' },
+    answer: {
+      zh: '在商户接受 Visa、支持周期扣款，且你的账户与卡片所在地区允许的情况下，可以用于订阅或日常账单。实际可用范围、费用和交易限制以商户及卡片规则为准。',
+      en: 'You can use it for subscriptions or everyday bills when the merchant accepts Visa and recurring payments, and your account and card region permit the transaction. Availability, fees, and limits depend on merchant and card rules.',
+    },
+  },
+  {
+    question: { zh: 'SkyDAO 安全吗？', en: 'Is SkyDAO secure?' },
+    answer: {
+      zh: 'SkyDAO 采用身份验证、数据加密、交易监控和多层账户保护等安全措施。任何数字资产服务都无法消除全部风险，建议同时启用所有安全设置，并妥善保管密码与验证信息。',
+      en: 'SkyDAO uses identity checks, data encryption, transaction monitoring, and layered account protection. No digital asset service can eliminate every risk, so enable all available security settings and protect your passwords and verification details.',
+    },
+  },
 ]
 
 function WalletCta({ children, dark = false }) {
@@ -146,19 +162,19 @@ function Pills({ items, dark = false }) {
 }
 
 const walletTokenCloud = [
-  ['btc', '/pages/wallet/assets/wallet/provided/icon-btc.png'],
-  ['usdt', '/pages/wallet/assets/wallet/provided/icon-usdt.png'],
-  ['ton', '/pages/wallet/assets/wallet/provided/icon-ton.png'],
-  ['trx', '/pages/wallet/assets/wallet/provided/icon-trx.png'],
-  ['eth', '/pages/wallet/assets/wallet/provided/icon-eth.png'],
-  ['sol', '/pages/wallet/assets/wallet/provided/icon-sol.png'],
-  ['usdc', '/pages/wallet/assets/wallet/provided/icon-usdc.png'],
+  ['btc', '/pages/shared/assets/wallet/provided/icon-btc.png'],
+  ['usdt', '/pages/shared/assets/wallet/provided/icon-usdt.png'],
+  ['ton', '/pages/shared/assets/wallet/provided/icon-ton.png'],
+  ['trx', '/pages/shared/assets/wallet/provided/icon-trx.png'],
+  ['eth', '/pages/shared/assets/wallet/provided/icon-eth.png'],
+  ['sol', '/pages/shared/assets/wallet/provided/icon-sol.png'],
+  ['usdc', '/pages/shared/assets/wallet/provided/icon-usdc.png'],
 ]
 
 function WalletAppMock() {
   return (
     <div className="wallet-app-device" aria-hidden="true">
-      <img className="wallet-app-complete" src="/pages/wallet/assets/wallet/provided/wallet-phone-complete.png" alt="" draggable="false" />
+      <img className="wallet-app-complete" src="/pages/shared/assets/wallet/provided/wallet-phone-complete.png" alt="" draggable="false" />
     </div>
   )
 }
@@ -168,16 +184,17 @@ export default function Wallet({ locale = 'en' }) {
   const heroVideoRef = useRef(null)
   const [globalSlide, setGlobalSlide] = useState(0)
   const [everythingSlide, setEverythingSlide] = useState(1)
+  const [openFaq, setOpenFaq] = useState(null)
 
   useLayoutEffect(() => playAboutTextMotion(pageRef.current), [])
 
   useEffect(() => {
-    const loadVideo = () => {
-      const video = heroVideoRef.current
-      if (!video || video.src) return
-      video.src = '/pages/wallet/assets/wallet/provided/wallet-secondary-hero.mp4'
-      video.play().catch(() => {})
-    }
+      const loadVideo = () => {
+        const video = heroVideoRef.current
+        if (!video || video.src) return
+        video.src = '/pages/shared/assets/wallet/provided/wallet-secondary-hero-optimized.mp4'
+        video.play().catch(() => {})
+      }
     const idle = window.requestIdleCallback
       ? window.requestIdleCallback(loadVideo, { timeout: 1800 })
       : window.setTimeout(loadVideo, 900)
@@ -255,7 +272,7 @@ export default function Wallet({ locale = 'en' }) {
           loop
           playsInline
           preload="metadata"
-          poster="/pages/wallet/assets/wallet/provided/wallet-secondary-hero-poster.jpg"
+          poster="/pages/shared/assets/wallet/provided/wallet-secondary-hero-poster.jpg"
         >
         </video>
         <div className="wallet-clean-hero-copy">
@@ -351,7 +368,7 @@ export default function Wallet({ locale = 'en' }) {
           </a>
         </div>
         <div className="wallet-visa-visual">
-          <img src="/pages/wallet/assets/wallet/provided/visa-scene.png" alt="" draggable="false" />
+          <img src="/pages/shared/assets/wallet/provided/visa-scene.webp" alt="" draggable="false" />
           <span className="wallet-visa-bubble is-top-left">全球支付</span>
           <span className="wallet-visa-bubble is-top-right">自动取款机提款</span>
           <span className="wallet-visa-bubble is-bottom-left">网上购物</span>
@@ -377,7 +394,7 @@ export default function Wallet({ locale = 'en' }) {
           </a>
         </div>
         <div className="wallet-visa-visual wallet-flow-visual">
-          <img src="/pages/wallet/assets/wallet/provided/flow-group-collage.png" alt="" draggable="false" />
+          <img src="/pages/shared/assets/wallet/provided/flow-group-collage.webp" alt="" draggable="false" />
           <span className="wallet-visa-bubble is-top-left">钱包</span>
           <span className="wallet-visa-bubble is-top-right">Visa</span>
           <span className="wallet-visa-bubble is-bottom-left">日常消费</span>
@@ -425,7 +442,7 @@ export default function Wallet({ locale = 'en' }) {
           <span>了解 SkyDAO Wallet</span><span className="button-arrow" aria-hidden="true">→</span>
         </a>
         <div className="wallet-security-visual" aria-hidden="true">
-          <img src="/pages/wallet/assets/wallet/generated/skydao-wallet-security.png" alt="" draggable="false" />
+          <img src="/pages/shared/assets/wallet/generated/skydao-wallet-security.webp" alt="" draggable="false" />
         </div>
       </section>
 
@@ -479,19 +496,36 @@ export default function Wallet({ locale = 'en' }) {
           <p>FAQ</p>
           <h2>常见问题</h2>
           <span>关于身份验证、支付场景和账户安全的几个核心问题。</span>
+          <a className="wallet-faq-help" href="https://help.skydao.com/" target="_blank" rel="noreferrer">
+            {locale === 'zh' ? '更多帮助' : 'More help'}
+            <span aria-hidden="true">↗</span>
+          </a>
         </div>
         <div className="wallet-faq-list">
-          {faqs.map((item) => (
-            <article key={item}>
-              <strong>{item}</strong>
-              <span>+</span>
+          {faqs.map((item, index) => {
+            const isOpen = openFaq === index
+            const answerId = `wallet-faq-answer-${index}`
+            return <article className={`wallet-faq-item ${isOpen ? 'is-open' : ''}`} key={item.question.zh}>
+              <button
+                className="wallet-faq-question"
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={answerId}
+                onClick={() => setOpenFaq(isOpen ? null : index)}
+              >
+                <strong>{item.question[locale]}</strong>
+                <span className="wallet-faq-icon" aria-hidden="true">{isOpen ? '−' : '+'}</span>
+              </button>
+              <div className="wallet-faq-answer" id={answerId} aria-hidden={!isOpen}>
+                <p>{item.answer[locale]}</p>
+              </div>
             </article>
-          ))}
+          })}
         </div>
       </section>
 
       <section className="wallet-clean-download wallet-download-like-hero fullpage-panel" id="wallet-download" data-panel-label="Download">
-        <img src={`${imageBase}/skydao-wallet-hero-clean-blue.png`} alt="" draggable="false" />
+        <img src="/pages/shared/assets/wallet/generated/skydao-wallet-hero-clean-blue.webp" alt="" draggable="false" />
         <div className="wallet-download-inner">
           <div className="wallet-clean-hero-copy">
             <p>下载</p>
@@ -502,7 +536,7 @@ export default function Wallet({ locale = 'en' }) {
             </div>
           </div>
           <div className="wallet-download-qr-card" aria-label="SkyDAO Wallet 下载二维码">
-            <img className="wallet-download-qr" src="/pages/wallet/assets/wallet/provided/download-qr.png" alt="" draggable="false" />
+            <img className="wallet-download-qr" src="/pages/shared/assets/wallet/provided/download-qr.png" alt="" draggable="false" />
             <div>
               <strong>扫码下载 SkyDAO</strong>
               <span>iOS / Android / APK</span>

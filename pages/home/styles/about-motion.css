@@ -141,9 +141,9 @@
     }
 
     .cinematic-aies .aies-media {
-      inset: 8vh 5vw 0;
-      width: 90vw;
-      height: 105vh;
+      inset: 0;
+      width: 100%;
+      height: 100%;
     }
 
     .cinematic-aies .aies-media img {

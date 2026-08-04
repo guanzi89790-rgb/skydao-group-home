@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useInView, useMotionValue, useSpring } from 'motion/react'
 
 export default function CountUp({
@@ -15,6 +15,7 @@ export default function CountUp({
 }) {
   const ref = useRef(null)
   const hasEnded = useRef(false)
+  const lastText = useRef('')
   const motionValue = useMotionValue(direction === 'down' ? to : from)
 
   const damping = 20 + 40 * (1 / duration)
@@ -42,27 +43,29 @@ export default function CountUp({
   }
 
   const maxDecimals = Math.max(getDecimalPlaces(from), getDecimalPlaces(to))
+  const numberFormatter = useMemo(
+    () => new Intl.NumberFormat('en-US', {
+      useGrouping: !!separator,
+      minimumFractionDigits: maxDecimals > 0 ? maxDecimals : 0,
+      maximumFractionDigits: maxDecimals > 0 ? maxDecimals : 0,
+    }),
+    [maxDecimals, separator],
+  )
 
   const formatValue = useCallback(
     (latest) => {
-      const hasDecimals = maxDecimals > 0
-
-      const options = {
-        useGrouping: !!separator,
-        minimumFractionDigits: hasDecimals ? maxDecimals : 0,
-        maximumFractionDigits: hasDecimals ? maxDecimals : 0,
-      }
-
-      const formattedNumber = Intl.NumberFormat('en-US', options).format(latest)
+      const formattedNumber = numberFormatter.format(latest)
 
       return separator ? formattedNumber.replace(/,/g, separator) : formattedNumber
     },
-    [maxDecimals, separator],
+    [numberFormatter, separator],
   )
 
   useEffect(() => {
     if (ref.current) {
-      ref.current.textContent = formatValue(direction === 'down' ? to : from)
+      const initialText = formatValue(direction === 'down' ? to : from)
+      ref.current.textContent = initialText
+      lastText.current = initialText
     }
   }, [from, to, direction, formatValue])
 
@@ -78,7 +81,11 @@ export default function CountUp({
       const durationTimeoutId = setTimeout(() => {
         hasEnded.current = true
         if (ref.current) {
-          ref.current.textContent = formatValue(direction === 'down' ? from : to)
+          const finalText = formatValue(direction === 'down' ? from : to)
+          if (finalText !== lastText.current) {
+            ref.current.textContent = finalText
+            lastText.current = finalText
+          }
         }
         if (typeof onEnd === 'function') onEnd()
       }, delay * 1000 + duration * 1000)
@@ -96,7 +103,11 @@ export default function CountUp({
     const unsubscribe = springValue.on('change', (latest) => {
       if (hasEnded.current) return
       if (ref.current) {
-        ref.current.textContent = formatValue(latest)
+        const nextText = formatValue(latest)
+        if (nextText !== lastText.current) {
+          ref.current.textContent = nextText
+          lastText.current = nextText
+        }
       }
     })
 
